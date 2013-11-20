@@ -100,7 +100,7 @@ public class RegisterScreen extends Screen {
                     		gamestates.mail = this.mailBox.getText(); 
                     		
                     		RequestRegisterUser rru = new RequestRegisterUser();
-                    		rru.regInfo = gamestates.getJSONRegister();
+                    		rru.regInfo = gamestates.getJSONRegister(game.getFileIO());
                     		client.sendTCP(rru);
                     	}
                 	}

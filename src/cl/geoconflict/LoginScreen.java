@@ -91,7 +91,7 @@ public class LoginScreen extends Screen {
                     		gamestates.passwd = this.passBox.getText(); 
                     		
                     		RequestLogin rl =  new RequestLogin();
-                    		rl.loginInfo = gamestates.getJSONLogin();
+                    		rl.loginInfo = gamestates.getJSONLogin(game.getFileIO());
                     		
                     		gamestates.username = this.userBox.getText();
                     		client.sendTCP(rl);

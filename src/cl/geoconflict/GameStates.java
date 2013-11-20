@@ -8,6 +8,8 @@ import org.apache.shiro.util.ByteSource;
 import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.JSONObject;
 
+import com.badlogic.androidgames.framework.FileIO;
+
 import android.util.Log;
 
 import cl.geoconflict.utils.HashUtil;
@@ -29,11 +31,12 @@ public class GameStates {
 	public String mail;
 	
 	//retorna objeto Json que se enviara al servidor para login
-	public JSONObject getJSONLogin(){
+	public JSONObject getJSONLogin(FileIO files){
 		JSONObject obj = new JSONObject();
 		//se obtiene salt de .geoconflcit
-		String s = Settings.ReadSaltSettings();
+		String s = Settings.ReadSaltSettings(files);
 		
+				
 		
 		if(s != null){
 			ByteSource salt = ByteSource.Util.bytes(Hex.decode(s));
@@ -53,7 +56,7 @@ public class GameStates {
 	}
 	
 	//retorna objeto Json que se enviara al servidor para registrar
-	public JSONObject getJSONRegister(){
+	public JSONObject getJSONRegister(FileIO files){
 		JSONObject obj = new JSONObject();
 		//encriptado de password
 		ByteSource salt = HashUtil.getSalt();
@@ -61,7 +64,7 @@ public class GameStates {
 		String s = salt.toHex();
 				
 		//guardar s en .geoconflict
-		Settings.writeSaltSettings(s);		
+		Settings.writeSaltSettings(files,s);		
 
 		try {
 			obj.put("username",username);

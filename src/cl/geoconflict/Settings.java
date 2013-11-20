@@ -16,6 +16,8 @@ import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.JSONObject;
 import org.apache.sling.commons.json.io.JSONStringer;
 
+import android.content.Context;
+
 import com.badlogic.androidgames.framework.FileIO;
 
 /**
@@ -61,30 +63,43 @@ public class Settings {
 		}
 	}
 
-	public static void writeSaltSettings(String input) {
-
-		BufferedWriter out;
+	
+	public static void writeSaltSettings(FileIO files, String input) {
+		BufferedWriter out = null;
 		try {
-			out = new BufferedWriter(new FileWriter("salt.txt"));
+			out = new BufferedWriter(new OutputStreamWriter(
+					files.writeFile("salt.txt")));
 			out.write(input);
-			out.close();
+			out.write("\n");
 		} catch (IOException e) {
-			System.out.println("There was a problem:" + e);
+		} finally {
+			try {
+				if (out != null)
+					out.close();
+			} catch (IOException e) {
+			}
 		}
-
 	}
 
-	public static String ReadSaltSettings() {
-
-		BufferedReader in;
+	
+	public static String ReadSaltSettings(FileIO files) {
+		BufferedReader in = null;
 		String salt;
 		try {
-			in = new BufferedReader(new FileReader("salt.txt"));
+			in = new BufferedReader(new InputStreamReader(
+					files.readFile("salt.txt")));
 			salt = in.readLine();
-			in.close();
 			return salt;
 		} catch (IOException e) {
-			System.out.println("There was a problem:" + e);
+			// :( It's ok we have defaults
+		} catch (NumberFormatException e) {
+			// :/ It's ok, defaults save our day
+		} finally {
+			try {
+				if (in != null)
+					in.close();
+			} catch (IOException e) {
+			}
 		}
 		return null;
 	}
