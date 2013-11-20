@@ -25,6 +25,8 @@ public class GameStates {
 	public boolean logged = false;
 	public boolean error = false;
 	public boolean registered = false;
+	public boolean roomAcepted = false;
+	public boolean listReceived = false;
 	
 	public String username;
 	public String passwd;
@@ -35,8 +37,6 @@ public class GameStates {
 		JSONObject obj = new JSONObject();
 		//se obtiene salt de .geoconflcit
 		String s = Settings.ReadSaltSettings(files);
-		
-				
 		
 		if(s != null){
 			ByteSource salt = ByteSource.Util.bytes(Hex.decode(s));

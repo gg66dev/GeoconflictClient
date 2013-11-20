@@ -8,6 +8,8 @@ import cl.geoconflict.GameStates;
 import cl.geoconflict.MenuScreen;
 import cl.geoconflict.gui.ButtonGUI;
 import cl.geoconflict.gui.ScrollBar;
+import cl.geoconflict.network.Network.RequestCloseRoom;
+import cl.geoconflict.network.Network.RequestCreateRoom;
 
 import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
@@ -40,7 +42,7 @@ public class CrearPartidaScreen extends Screen {
 			scrollbar.GetElement(i).setDraw(true);
 			
 			if(i == 0)
-				scrollbar.GetElement(i).setName("Administrador");
+				scrollbar.GetElement(i).setName(this.gamestates.username);
 			else
 				scrollbar.GetElement(i).setName("Jugador"+i);
 		}
@@ -60,6 +62,10 @@ public class CrearPartidaScreen extends Screen {
 	            scrollbar.update(deltaTime,event);
 	        }
 			if(inBounds(event, 10, 400, Assets.back.getWidth(), Assets.back.getHeight()) ) {
+				RequestCloseRoom rcr =  new RequestCloseRoom();
+            	rcr.userNameRoom = this.gamestates.username;
+            	this.client.sendTCP(rcr);
+            	this.gamestates.roomAcepted = false;
 				this.game.setScreen(new MenuScreen(this.game, this.client,this.gamestates));
 			}
 			if(inBounds(event, 150, 400, Assets.empezar.getWidth(), Assets.empezar.getHeight()) ) {

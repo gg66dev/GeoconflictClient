@@ -31,6 +31,7 @@ public class LoginScreen extends Screen {
 	TextBox userBox;
 	PasswordBox passBox;
 	Client client;
+	NetworkListener nl;
 	
 	/*clase que guarda variables intermediarias entre
 	las screen y el networklistener*/ 
@@ -48,15 +49,14 @@ public class LoginScreen extends Screen {
 		gamestates = new GameStates();
 		
 		Network.register(client);
-		NetworkListener nl = new NetworkListener();
-		nl.init(gamestates,client);//parametro juego
+		this.nl = new NetworkListener();
+		this.nl.init(gamestates,client);//parametro juego
 		client.addListener(nl);
 		client.start();
 		try {
-			client.connect(30000,"190.54.84.90",Network.portTCP, Network.portUDP);
+			client.connect(30000,"192.168.2.103",Network.portTCP, Network.portUDP);
 			//*cambiar timeout a 5000
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		 

@@ -1,6 +1,7 @@
 package cl.geoconflict.network;
 
 import org.apache.sling.commons.json.JSONObject;
+
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
 
@@ -24,6 +25,7 @@ public class Network {
             kryo.register(RequestAnswer.class);
             kryo.register(RequestAnswer.answer_id.class);
             kryo.register(RequestCreateRoom.class);
+            kryo.register(RequestCloseRoom.class);
             kryo.register(RequestJoinRoom.class);
             kryo.register(RequestListRoom.class);
             kryo.register(RequestListUser.class);
@@ -47,12 +49,19 @@ public class Network {
     	//id para no crear una respuesta por cada request
     	public answer_id id;
     	public enum answer_id {
-    		LOGIN,REGISTER,CREATEROOM,JOINROOM,MATCHINIT
+    		LOGIN,REGISTER,CREATEROOM,CLOSEROOM,JOINROOM,MATCHINIT
     	}
     }
     
     //crear room request
     public static  class RequestCreateRoom{
+    	public String userNameRoom;
+    }
+    
+    /**
+     * Request de cerrar sala
+     */
+    public static  class RequestCloseRoom{
     	public String userNameRoom;
     }
     

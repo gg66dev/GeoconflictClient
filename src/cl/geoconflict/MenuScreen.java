@@ -5,6 +5,12 @@ package cl.geoconflict;
 
 import java.util.List;
 
+import org.apache.sling.commons.json.JSONObject;
+
+import cl.geoconflict.network.Network.RequestAnswer;
+import cl.geoconflict.network.Network.RequestCreateRoom;
+import cl.geoconflict.network.Network.RequestListRoom;
+import cl.geoconflict.network.Network.RequestLogin;
 import cl.geoconflict.screen.CrearPartidaScreen;
 import cl.geoconflict.screen.PartidasDisponiblesScreen;
 
@@ -21,11 +27,13 @@ import com.esotericsoftware.kryonet.Client;
 public class MenuScreen extends Screen{
 
 	Client client;
-	GameStates gamestates;
+	GameStates gameStates;
+
 	
-	public MenuScreen(Game game, Client client, GameStates gamestates) {
+	public MenuScreen(Game game, Client client, GameStates gameStates) {
 		super(game);
 		this.client = client;
+		this.gameStates = gameStates;
 	}
 
 	@Override
@@ -45,17 +53,28 @@ public class MenuScreen extends Screen{
                 }
                 if(inBounds(event, 100, 180, 128, 64) ) {
 //                    if(Settings.soundEnabled)
-                	this.game.setScreen(new CrearPartidaScreen(this.game, this.client, this.gamestates));
+                	RequestCreateRoom rcr =  new RequestCreateRoom();
+                	rcr.userNameRoom = this.gameStates.username;
+                	this.client.sendTCP(rcr);
                 }
                 if(inBounds(event, 100, 260, 128, 64) ) {
 //                    if(Settings.soundEnabled)
-                	this.game.setScreen(new PartidasDisponiblesScreen(this.game, this.client, this.gamestates));
+                	RequestListRoom rcr =  new RequestListRoom();
+                	rcr.list = new JSONObject();
+                	this.client.sendTCP(rcr);
                 }
                 if(inBounds(event, 100, 340, 128, 64) ) {
                 	// TODO crear mapa
 //                    if(Settings.soundEnabled)
                 }
             }
+        }
+        
+        if(this.gameStates.roomAcepted){
+        	this.game.setScreen(new CrearPartidaScreen(this.game, this.client, this.gameStates));
+        }
+        if(this.gameStates.listReceived){
+        	this.game.setScreen(new PartidasDisponiblesScreen(this.game, this.client, this.gameStates));
         }
 	}
 

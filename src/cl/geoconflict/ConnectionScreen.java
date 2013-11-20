@@ -19,7 +19,7 @@ public class ConnectionScreen extends Screen {
 	private GameStates gamestates;
 
 
-	public ConnectionScreen(Game game, Client client, GameStates gamestate) {
+	public ConnectionScreen(Game game, Client client, GameStates gamestates) {
         super(game);
         this.client = client;
         this.gamestates = gamestates;

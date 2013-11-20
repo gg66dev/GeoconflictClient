@@ -57,6 +57,7 @@ public class NetworkListener extends Listener {
 			if (answer.id == RequestAnswer.answer_id.CREATEROOM
 					&& answer.accepted) {
 				Log.info("A creado una sala!!");
+				this.gamestates.roomAcepted = true;
 			}
 
 			// no se creo sala
@@ -119,6 +120,7 @@ public class NetworkListener extends Listener {
 					System.out.println((i + 1) + ".- unirse a sala "
 							+ rooms.get(i));
 				}
+				this.gamestates.listReceived = true;
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
