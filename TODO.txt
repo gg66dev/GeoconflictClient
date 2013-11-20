@@ -1,0 +1,15 @@
+Avances parciales (17-09-2013)
+===========================
+
+- Crear Screens Guias (Help), login (formulario user y pass), lista de partidas y de crear partida
+- Crear anuncios flash para el usuario
+- Falta funcionabilidad de crear mapa
+- Crear y agregar sonidos y audio
+- Cambiar fondo (optativo)
+- Definir el loop del juego para funsionar con código del demo y luego eliminar el codigo innecesario
+
+Primera iteracion del juego (23-08-2013)
+===========================
+
+- Complementar JavaDoc (falta documentar algunos metodos y funciones
+- Mayor testing (mas plataformas)

@@ -1,0 +1,410 @@
+[1mdiff --git a/src/cl/geoconflict/LoginScreen.java b/src/cl/geoconflict/LoginScreen.java[m
+[1mindex 5b56efe..2f9f5dd 100644[m
+[1m--- a/src/cl/geoconflict/LoginScreen.java[m
+[1m+++ b/src/cl/geoconflict/LoginScreen.java[m
+[36m@@ -3,53 +3,178 @@[m
+  */[m
+ package cl.geoconflict;[m
+ [m
+[32m+[m[32mimport java.util.List;[m
+[32m+[m
+[32m+[m[32mimport android.content.Context;[m
+ import android.graphics.Color;[m
+ import android.graphics.Paint.Style;[m
+[32m+[m[32mimport android.util.Log;[m
+[32m+[m[32mimport android.view.KeyEvent;[m
+[32m+[m[32mimport android.view.View;[m
+[32m+[m[32mimport android.view.inputmethod.InputMethodManager;[m
+[32m+[m[32mimport android.widget.EditText;[m
+[32m+[m[32mimport android.widget.Toast;[m
+ [m
+ import com.badlogic.androidgames.framework.Game;[m
+ import com.badlogic.androidgames.framework.Graphics;[m
+[32m+[m[32mimport com.badlogic.androidgames.framework.Input;[m
+ import com.badlogic.androidgames.framework.Screen;[m
+[32m+[m[32mimport com.badlogic.androidgames.framework.Input.TouchEvent;[m
+[32m+[m
+[32m+[m
+ [m
+ /**[m
+  * @author Fernando Valencia F.[m
+  *[m
+  */[m
+ public class LoginScreen extends Screen {[m
+[32m+[m[41m	[m
+[32m+[m	[32mList<Input.KeyEvent> keyList;[m
+[32m+[m	[32mTextbox userbox;[m
+[32m+[m	[32mPasswordBox pass;[m
+[32m+[m[41m	[m
+[32m+[m	[32mString password;[m
+[32m+[m[41m	[m
+[32m+[m	[32mboolean showSoftKeyboard;[m
+ [m
+ 	public LoginScreen(Game game) {[m
+ 		super(game);[m
+[32m+[m[41m			[m
+[32m+[m[41m		[m
+[32m+[m		[32muserbox = new Textbox(50, 50, 200, 50);[m
+[32m+[m		[32mpass = new PasswordBox(50, 150, 200, 50);[m
+[32m+[m[41m		[m
+[32m+[m		[32mshowSoftKeyboard = false;[m
+ 	}[m
+[32m+[m[41m	[m
+ [m
+ 	@Override[m
+ 	public void update(float deltaTime) {[m
+ 		// TODO Auto-generated method stub[m
+ 		[m
+[31m-	}[m
+[32m+[m[32m      Graphics g = game.getGraphics();[m
+[32m+[m[32m        List<TouchEvent> touchEvents = game.getInput().getTouchEvents();[m
+[32m+[m[32m        //game.getInput().getKeyEvents();[m[41m       [m
+[32m+[m[41m        [m
+[32m+[m[41m        [m
+[32m+[m[32m        int len = touchEvents.size();[m
+[32m+[m[32m        for(int i = 0; i < len; i++) {[m
+[32m+[m[32m            TouchEvent event = touchEvents.get(i);[m
+[32m+[m[32m            if(event.type == TouchEvent.TOUCH_UP) {[m
+[32m+[m[41m            	[m
+[32m+[m[41m            [m	[32m//preciona el userBox[m
+[32m+[m[41m            [m	[32mif(inBounds(event, userbox.getX(), userbox.getY(),[m[41m [m
+[32m+[m[41m            [m			[32muserbox.getWidth(), userbox.getHeight())) {[m
+[32m+[m[32m                    //Settings.soundEnabled = !Settings.soundEnabled;[m
+[32m+[m[32m                    // TODO[m
+[32m+[m	[32m                Log.d("depuracion", "touch userbox");[m
+[32m+[m[41m	                [m
+[32m+[m	[32m                //no cambia estado si ya esta seleccionada passbox[m
+[32m+[m[32m                    if(!pass.getSelected())[m
+[32m+[m[41m                    [m	[32mshowSoftKeyboard = !showSoftKeyboard;[m
+[32m+[m[41m	                [m
+[32m+[m[32m                    userbox.setSelected(!userbox.getSelected());[m
+[32m+[m	[32m                pass.setSelected(false);[m
+[32m+[m	[32m            }[m
+[32m+[m[41m            	[m
+[32m+[m[41m            	[m
+[32m+[m[41m            [m	[32m//preciona el PasswordBox[m
+[32m+[m[41m            [m	[32mif(inBounds(event, pass.getX(), pass.getY(),[m[41m [m
+[32m+[m[41m            [m			[32mpass.getWidth(), pass.getHeight())) {[m
+[32m+[m[32m                    //Settings.soundEnabled = !Settings.soundEnabled;[m
+[32m+[m[32m                    Log.d("depuracion", "touch password");[m
+[32m+[m[41m	                [m
+[32m+[m[32m                    //no cambia estado si ya esta seleccionada userbox[m
+[32m+[m[32m                    if(!userbox.getSelected())[m
+[32m+[m[41m                    [m	[32mshowSoftKeyboard = !showSoftKeyboard;[m
+[32m+[m[41m                    [m
+[32m+[m[32m                    userbox.setSelected(false);[m
+[32m+[m	[32m                pass.setSelected(!pass.getSelected());[m
+[32m+[m[41m            [m	[32m}[m
+[32m+[m[41m            	[m
+[32m+[m[32m            }[m
+[32m+[m[41m            [m
+[32m+[m[41m            [m
+[32m+[m[32m        }[m
+[32m+[m[41m        [m
+[32m+[m[32m        if(showSoftKeyboard)[m
+[32m+[m[41m        [m	[32m//muestra softkeyboard[m
+[32m+[m[32m            game.getInput().showkeyboard();[m
+[32m+[m[32m        else[m
+[32m+[m[41m        [m	[32m//oculta softKeyboard[m
+[32m+[m[41m        [m	[32mgame.getInput().hidekeyboard();[m
+[32m+[m[41m        [m
+[32m+[m[32m        //obtener lista solo cuando softkeyboard esta activado[m
+[32m+[m[32m        if(userbox.getSelected()){[m
+[32m+[m[41m        [m	[32mkeyList = game.getInput().getKeyEvents();[m
+[32m+[m[41m        [m	[32muserbox.setText(keyList);[m
+[32m+[m[41m        	[m
+[32m+[m[41m        [m	[32m//si se preciona back o enter se deselecciona los box[m
+[32m+[m[32m            if(keyList.size() != 0){[m
+[32m+[m[41m            [m	[32mif(keyList.get(0).keyCode == 4 || keyList.get(0).keyCode == 66){[m
+[32m+[m[41m            [m		[32mshowSoftKeyboard = false;[m
+[32m+[m[41m            [m		[32muserbox.setSelected(false);[m
+[32m+[m[32m                    pass.setSelected(false);[m
+[32m+[m[41m            [m	[32m}[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+[32m+[m[41m        [m
+[32m+[m[32m        if(pass.getSelected()){[m
+[32m+[m[41m        [m	[32mkeyList = game.getInput().getKeyEvents();[m
+[32m+[m[41m        [m	[32mpass.setText(keyList);[m
+[32m+[m[41m        	[m
+[32m+[m[41m        [m	[32m//si se preciona back o enter se deselecciona los box[m
+[32m+[m[32m            if(keyList.size() != 0){[m
+[32m+[m[41m            [m	[32mLog.d("dep",""+keyList.get(0).keyCode);[m
+[32m+[m[41m            	[m
+[32m+[m[41m            [m	[32mif(keyList.get(0).keyCode == 4 || keyList.get(0).keyCode == 66){[m
+[32m+[m[41m            [m		[32mshowSoftKeyboard = false;[m
+[32m+[m[41m            [m		[32muserbox.setSelected(false);[m
+[32m+[m[32m                    pass.setSelected(false);[m
+[32m+[m[41m            [m	[32m}[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+[32m+[m[41m        [m
+[32m+[m[41m        [m
+[32m+[m[41m        	[m
+[32m+[m[41m        [m
+[32m+[m[41m        [m
+[32m+[m[41m        [m
+[32m+[m[32m }[m
+ [m
+ 	@Override[m
+ 	public void present(float deltaTime) {[m
+ 		Graphics g = game.getGraphics();[m
+ 		[m
+[32m+[m[41m		[m
+[32m+[m		[32m//dibujar editext en el canvas[m
+[32m+[m[41m		[m
+ 		g.drawPixmap(Assets.background, 0, 0);[m
+[31m-		g.drawRect(10, 10, 200, 20, Color.rgb(0,  0,  0), Style.STROKE);[m
+[32m+[m[41m		[m
+[32m+[m		[32muserbox.draw(g);[m
+[32m+[m		[32mpass.draw(g);[m
+ 	}[m
+ [m
+ 	@Override[m
+ 	public void pause() {[m
+ 		// TODO Auto-generated method stub[m
+[31m-		[m
+[32m+[m
+[32m+[m		[32mshowSoftKeyboard = false;[m
+[32m+[m[32m        userbox.setSelected(false);[m
+[32m+[m[32m        pass.setSelected(false);[m
+[32m+[m
+ 	}[m
+ [m
+ 	@Override[m
+ 	public void resume() {[m
+ 		// TODO Auto-generated method stub[m
+[32m+[m
+ 		[m
+ 	}[m
+ [m
+ 	@Override[m
+ 	public void dispose() {[m
+ 		// TODO Auto-generated method stub[m
+[31m-		[m
+ 	}[m
+ [m
+ }[m
+[1mdiff --git a/src/cl/geoconflict/MainMenuScreen.java b/src/cl/geoconflict/MainMenuScreen.java[m
+[1mindex cf33adc..2ff3ac2 100644[m
+[1m--- a/src/cl/geoconflict/MainMenuScreen.java[m
+[1m+++ b/src/cl/geoconflict/MainMenuScreen.java[m
+[36m@@ -23,7 +23,7 @@[m [mpublic class MainMenuScreen extends Screen {[m
+     public void update(float deltaTime) {[m
+         Graphics g = game.getGraphics();[m
+         List<TouchEvent> touchEvents = game.getInput().getTouchEvents();[m
+[31m-        game.getInput().getKeyEvents();       [m
+[32m+[m[32m        //game.getInput().getKeyEvents();[m[41m       [m
+         [m
+         int len = touchEvents.size();[m
+         for(int i = 0; i < len; i++) {[m
+[36m@@ -37,7 +37,7 @@[m [mpublic class MainMenuScreen extends Screen {[m
+                 if(inBounds(event, 100, 250, 128, 64) ) {[m
+                     // TODO[m
+ //                    if(Settings.soundEnabled)[m
+[31m-                	game.setScreen(new MenuScreen(game));[m
+[32m+[m[41m                [m	[32mgame.setScreen(new LoginScreen(game));[m
+                 }[m
+                 if(inBounds(event, 100, 330, 128, 64) ) {[m
+                 	// TODO[m
+[1mdiff --git a/src/cl/geoconflict/StartScreen.java b/src/cl/geoconflict/StartScreen.java[m
+[1mindex 1e7de31..d9d10cf 100644[m
+[1m--- a/src/cl/geoconflict/StartScreen.java[m
+[1m+++ b/src/cl/geoconflict/StartScreen.java[m
+[36m@@ -22,7 +22,7 @@[m [mpublic class StartScreen extends Screen {[m
+     @Override[m
+     public void update(float deltaTime) {[m
+         List<TouchEvent> touchEvents = game.getInput().getTouchEvents();[m
+[31m-        game.getInput().getKeyEvents();[m
+[32m+[m[32m        //game.getInput().getKeyEvents();[m
+         Graphics g = game.getGraphics();[m
+         [m
+         int len = touchEvents.size();[m
+[1mdiff --git a/src/com/badlogic/androidgames/framework/Game.java b/src/com/badlogic/androidgames/framework/Game.java[m
+[1mindex 448e605..8f7b8ba 100644[m
+[1m--- a/src/com/badlogic/androidgames/framework/Game.java[m
+[1m+++ b/src/com/badlogic/androidgames/framework/Game.java[m
+[36m@@ -1,5 +1,7 @@[m
+ package com.badlogic.androidgames.framework;[m
+ [m
+[32m+[m[32mimport android.content.Context;[m[41m[m
+[32m+[m[41m[m
+ public interface Game {[m
+     public Input getInput();[m
+ [m
+[36m@@ -14,4 +16,6 @@[m [mpublic interface Game {[m
+     public Screen getCurrentScreen();[m
+ [m
+     public Screen getStartScreen();[m
+[32m+[m[41m    [m
+[32m+[m[32m    public Context getContext();[m[41m[m
+ }[m
+\ No newline at end of file[m
+[1mdiff --git a/src/com/badlogic/androidgames/framework/Graphics.java b/src/com/badlogic/androidgames/framework/Graphics.java[m
+[1mindex e74828f..c3cae0e 100644[m
+[1m--- a/src/com/badlogic/androidgames/framework/Graphics.java[m
+[1m+++ b/src/com/badlogic/androidgames/framework/Graphics.java[m
+[36m@@ -24,6 +24,9 @@[m [mpublic interface Graphics {[m
+ [m
+     public void drawPixmap(Pixmap pixmap, int x, int y);[m
+ [m
+[32m+[m[41m    [m
+[32m+[m[32m    public void drawText(String Text,int x, int y, int color,int size);[m[41m[m
+[32m+[m[41m    [m
+     public int getWidth();[m
+ [m
+     public int getHeight();[m
+[1mdiff --git a/src/com/badlogic/androidgames/framework/Input.java b/src/com/badlogic/androidgames/framework/Input.java[m
+[1mindex 8eaeff9..4f1e841 100644[m
+[1m--- a/src/com/badlogic/androidgames/framework/Input.java[m
+[1m+++ b/src/com/badlogic/androidgames/framework/Input.java[m
+[36m@@ -2,6 +2,8 @@[m [mpackage com.badlogic.androidgames.framework;[m
+ [m
+ import java.util.List;[m
+ [m
+[32m+[m[32mimport android.view.View;[m[41m[m
+[32m+[m[41m[m
+ public interface Input {[m
+     public static class KeyEvent {[m
+         public static final int KEY_DOWN = 0;[m
+[36m@@ -67,4 +69,8 @@[m [mpublic interface Input {[m
+     public List<KeyEvent> getKeyEvents();[m
+ [m
+     public List<TouchEvent> getTouchEvents();[m
+[32m+[m[41m    [m
+[32m+[m[32m    public void showkeyboard();[m[41m[m
+[32m+[m[41m    [m
+[32m+[m[32m    public void hidekeyboard();[m[41m[m
+ }[m
+[1mdiff --git a/src/com/badlogic/androidgames/framework/impl/AndroidGame.java b/src/com/badlogic/androidgames/framework/impl/AndroidGame.java[m
+[1mindex 376f94f..73291e9 100644[m
+[1m--- a/src/com/badlogic/androidgames/framework/impl/AndroidGame.java[m
+[1m+++ b/src/com/badlogic/androidgames/framework/impl/AndroidGame.java[m
+[36m@@ -27,6 +27,8 @@[m [mpublic abstract class AndroidGame extends Activity implements Game {[m
+     Screen screen;[m
+     WakeLock wakeLock;[m
+ [m
+[32m+[m[32m    Context context;[m[41m[m
+[32m+[m[41m    [m
+     @Override[m
+     public void onCreate(Bundle savedInstanceState) {[m
+         super.onCreate(savedInstanceState);[m
+[36m@@ -56,6 +58,9 @@[m [mpublic abstract class AndroidGame extends Activity implements Game {[m
+         [m
+         PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);[m
+         wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "GLGame");[m
+[32m+[m[41m        [m
+[32m+[m[41m        [m
+[32m+[m[32m        context = getApplicationContext();[m[41m[m
+     }[m
+ [m
+     @Override[m
+[36m@@ -96,6 +101,10 @@[m [mpublic abstract class AndroidGame extends Activity implements Game {[m
+     public Audio getAudio() {[m
+         return audio;[m
+     }[m
+[32m+[m[41m    [m
+[32m+[m[32m    public Context getContext(){[m[41m[m
+[32m+[m[41m    [m	[32mreturn context;[m[41m[m
+[32m+[m[32m    }[m[41m[m
+ [m
+     @Override[m
+     public void setScreen(Screen screen) {[m
+[1mdiff --git a/src/com/badlogic/androidgames/framework/impl/AndroidGraphics.java b/src/com/badlogic/androidgames/framework/impl/AndroidGraphics.java[m
+[1mindex d91f7bd..60ab0af 100644[m
+[1m--- a/src/com/badlogic/androidgames/framework/impl/AndroidGraphics.java[m
+[1m+++ b/src/com/badlogic/androidgames/framework/impl/AndroidGraphics.java[m
+[36m@@ -129,6 +129,14 @@[m [mpublic class AndroidGraphics implements Graphics {[m
+     }[m
+ [m
+     @Override[m
+[32m+[m[32m    public void drawText(String text,int x, int y, int color, int size){[m[41m[m
+[32m+[m[41m    [m	[32mpaint.setColor(color);[m[41m [m
+[32m+[m[41m    [m	[32mpaint.setTextSize(size);[m[41m [m
+[32m+[m[41m    [m	[32mcanvas.drawText(text, x, y, paint);[m[41m[m
+[32m+[m[32m    }[m[41m[m
+[32m+[m[41m    [m
+[32m+[m[41m    [m
+[32m+[m[32m    @Override[m[41m[m
+     public int getWidth() {[m
+         return frameBuffer.getWidth();[m
+     }[m
+[1mdiff --git a/src/com/badlogic/androidgames/framework/impl/AndroidInput.java b/src/com/badlogic/androidgames/framework/impl/AndroidInput.java[m
+[1mindex 347d859..cdb45c2 100644[m
+[1m--- a/src/com/badlogic/androidgames/framework/impl/AndroidInput.java[m
+[1m+++ b/src/com/badlogic/androidgames/framework/impl/AndroidInput.java[m
+[36m@@ -4,7 +4,9 @@[m [mimport java.util.List;[m
+ [m
+ import android.content.Context;[m
+ import android.os.Build.VERSION;[m
+[32m+[m[32mimport android.util.Log;[m[41m[m
+ import android.view.View;[m
+[32m+[m[32mimport android.view.inputmethod.InputMethodManager;[m[41m[m
+ [m
+ import com.badlogic.androidgames.framework.Input;[m
+ [m
+[36m@@ -12,16 +14,32 @@[m [mpublic class AndroidInput implements Input {[m
+     AccelerometerHandler accelHandler;[m
+     KeyboardHandler keyHandler;[m
+     TouchHandler touchHandler;[m
+[32m+[m[41m    [m
+[32m+[m[32m    //agregado para mostrar soft keyboard[m[41m[m
+[32m+[m[32m    InputMethodManager inputManager;[m[41m[m
+[32m+[m[32m    View view;[m[41m[m
+[32m+[m[41m    [m
+ [m
+     public AndroidInput(Context context, View view, float scaleX, float scaleY) {[m
+         accelHandler = new AccelerometerHandler(context);[m
+[31m-        keyHandler = new KeyboardHandler(view);               [m
+[32m+[m[32m        keyHandler = new KeyboardHandler(view);[m[41m    [m
+[32m+[m[32m        inputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);[m[41m[m
+[32m+[m[32m        this.view = view;[m[41m[m
+[32m+[m[41m        [m
+         if(Integer.parseInt(VERSION.SDK) < 5) [m
+             touchHandler = new SingleTouchHandler(view, scaleX, scaleY);[m
+         else[m
+             touchHandler = new MultiTouchHandler(view, scaleX, scaleY);        [m
+     }[m
+ [m
+[32m+[m[32m    public void showkeyboard(){[m[41m[m
+[32m+[m[41m    [m	[41m  [m	[32minputManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);[m[41m[m
+[32m+[m[32m    }[m[41m[m
+[32m+[m[41m    [m
+[32m+[m[32m    public void hidekeyboard(){[m[41m[m
+[32m+[m[41m    [m		[32minputManager.hideSoftInputFromWindow(view.getWindowToken(), 0);[m[41m[m
+[32m+[m[32m    }[m[41m[m
+[32m+[m[41m    [m
+     @Override[m
+     public boolean isKeyPressed(int keyCode) {[m
+         return keyHandler.isKeyPressed(keyCode);[m
+[1mdiff --git a/src/com/badlogic/androidgames/framework/impl/KeyboardHandler.java b/src/com/badlogic/androidgames/framework/impl/KeyboardHandler.java[m
+[1mindex 36f825c..2f943cc 100644[m
+[1m--- a/src/com/badlogic/androidgames/framework/impl/KeyboardHandler.java[m
+[1m+++ b/src/com/badlogic/androidgames/framework/impl/KeyboardHandler.java[m
+[36m@@ -3,6 +3,7 @@[m [mpackage com.badlogic.androidgames.framework.impl;[m
+ import java.util.ArrayList;[m
+ import java.util.List;[m
+ [m
+[32m+[m[32mimport android.util.Log;[m[41m[m
+ import android.view.View;[m
+ import android.view.View.OnKeyListener;[m
+ [m
+[36m@@ -31,13 +32,15 @@[m [mpublic class KeyboardHandler implements OnKeyListener {[m
+ [m
+     @Override[m
+     public boolean onKey(View v, int keyCode, android.view.KeyEvent event) {[m
+[31m-        if (event.getAction() == android.view.KeyEvent.ACTION_MULTIPLE)[m
+[32m+[m[41m    	[m
+[32m+[m[41m    [m	[32mif (event.getAction() == android.view.KeyEvent.ACTION_MULTIPLE)[m[41m[m
+             return false;[m
+ [m
+         synchronized (this) {[m
+             KeyEvent keyEvent = keyEventPool.newObject();[m
+             keyEvent.keyCode = keyCode;[m
+             keyEvent.keyChar = (char) event.getUnicodeChar();[m
+[32m+[m[41m            [m
+             if (event.getAction() == android.view.KeyEvent.ACTION_DOWN) {[m
+                 keyEvent.type = KeyEvent.KEY_DOWN;[m
+                 if(keyCode > 0 && keyCode < 127)[m
+warning: CRLF will be replaced by LF in .project.
+The file will have its original line endings in your working directory.
