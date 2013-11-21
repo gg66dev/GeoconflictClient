@@ -73,10 +73,7 @@ public class NetworkListener extends Listener {
 			if (answer.id == RequestAnswer.answer_id.JOINROOM
 					&& answer.accepted) {
 				System.out.println("Se unido a la sala");
-				// solo puede recibir cambios de administrador
-				// volver a seleccionar otra sala
-				// desconectarse
-
+				gamestates.roomJoined = true;
 			}
 
 			// no se unio a una sala
@@ -110,40 +107,17 @@ public class NetworkListener extends Listener {
 			RequestListRoom rlr = new RequestListRoom();
 			Log.info("Lista de salas!!");
 			rlr = (RequestListRoom) o;
-			JSONArray rooms;
-
-			System.out.println("Seleccionar sala");
-
-			try {
-				rooms = (JSONArray) rlr.list.get("roomList");
-				for (int i = 0; i < rooms.length(); i++) {
-					System.out.println((i + 1) + ".- unirse a sala "
-							+ rooms.get(i));
-				}
-				this.gamestates.listReceived = true;
-			} catch (JSONException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-
-			System.out.println("a.- Actualizar");
-
+			//guarda lista de salas en gamestastes
+			this.gamestates.listReceived = true;
+			this.gamestates.setListRoom(rlr.list);
 		}
 
 		// listas usuarios de sala
 		if (o instanceof RequestListUser) {
 			Log.info("Lista de usuarios!!");
 			RequestListUser rlu = (RequestListUser) o;
-			JSONArray users;
-			try {
-				users = (JSONArray) rlu.list.get("userList");
-				for (int i = 0; i < users.length(); i++) {
-					System.out.println(users.get(i));
-				}
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			gamestates.newPlayerList = true;
+			this.gamestates.setListUsers(rlu.list);
 
 		}
 

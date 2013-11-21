@@ -70,7 +70,10 @@ public class ButtonGUI implements ElementGUI {
 		drawName = b;
 	}
 		
-
+	public void setPixmapLayer(Pixmap newPixmap) {
+		this.pixmap = newPixmap;
+	}
+		
 
 	
 	

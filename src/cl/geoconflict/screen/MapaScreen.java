@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.graphics.Color;
 import cl.geoconflict.Assets;
+import cl.geoconflict.GameStates;
 import cl.geoconflict.animation.PlayerPoint;
 import cl.geoconflict.gameplay.Clock;
 import cl.geoconflict.gameplay.Player;
@@ -12,6 +13,7 @@ import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
 import com.badlogic.androidgames.framework.Screen;
 import com.badlogic.androidgames.framework.Input.TouchEvent;
+import com.esotericsoftware.kryonet.Client;
 
 public class MapaScreen extends Screen {
 
@@ -22,7 +24,7 @@ public class MapaScreen extends Screen {
 	PlayerPoint playerPoints[];
 	int numPlayers = 3;
 	
-	public MapaScreen(Game game) {
+	public MapaScreen(Game game, Client client, GameStates gamestates) {
 		super(game);
 		
 		Assets.simpleAmmo.scale(90,90);

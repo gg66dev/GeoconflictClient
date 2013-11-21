@@ -151,7 +151,7 @@ public class ScrollBar {
 		
 		//input fuera del marco del scroll
 		if( this.y > touchY || touchY > this.y + this.h)
-			return 0;
+			return -1;
 		
 		
 		int elementBefore = this.y;
@@ -165,7 +165,7 @@ public class ScrollBar {
 	
 			if( (y <= touchY) && (touchY <= y + h ) &&
 					(x <= touchX) && (touchX <= x + w ))
-				return (i+1);
+				return (i);
 			
 			
 			elementBefore += h + spaceBetween;

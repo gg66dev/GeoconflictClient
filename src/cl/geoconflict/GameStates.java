@@ -1,10 +1,12 @@
 package cl.geoconflict;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.apache.shiro.codec.Hex;
 import org.apache.shiro.crypto.hash.Sha1Hash;
 import org.apache.shiro.util.ByteSource;
+import org.apache.sling.commons.json.JSONArray;
 import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.JSONObject;
 
@@ -26,11 +28,25 @@ public class GameStates {
 	public boolean error = false;
 	public boolean registered = false;
 	public boolean roomAcepted = false;
+	public boolean roomJoined = false;
 	public boolean listReceived = false;
+	public boolean newPlayerList = false;
+	public boolean loading;
 	
 	public String username;
 	public String passwd;
 	public String mail;
+	
+	//listar sala -unirse
+	public ArrayList<String> array = new ArrayList<String>(); //listas de salas disponibles
+	public ArrayList<String> team = new ArrayList<String>();
+	public String currMatch;
+	
+	//crear partida
+	public int timeMatch;
+	public ArrayList<String> arrayUsers = new ArrayList<String>();
+	
+	
 	
 	//retorna objeto Json que se enviara al servidor para login
 	public JSONObject getJSONLogin(FileIO files){
@@ -76,5 +92,34 @@ public class GameStates {
 			e.printStackTrace();
 		}
 		return obj;
+	}
+	
+	//lista de salas el arreglo json lo guarda como arraylist
+	public void setListRoom(JSONObject obj){
+		JSONArray list;
+		Log.d("salas entregadas",obj.toString());
+		try {
+			list = (JSONArray) obj.get("roomList");
+			for (int i = 0; i < list.length(); i++) {
+				array.add((String)list.get(i));
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public void setListUsers(JSONObject obj) {
+		JSONArray list;
+		Log.d("debug - se asigno nueva lista de usuarios",obj.toString());
+		try {
+			list = (JSONArray) obj.get("lista");
+			for (int i = 0; i < list.length(); i++) {
+				arrayUsers.add((String)list.get(i));
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

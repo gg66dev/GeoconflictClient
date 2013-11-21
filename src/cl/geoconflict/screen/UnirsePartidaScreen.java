@@ -9,6 +9,7 @@ import cl.geoconflict.MenuScreen;
 
 import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
+import com.badlogic.androidgames.framework.Pixmap;
 import com.badlogic.androidgames.framework.Screen;
 import com.badlogic.androidgames.framework.Input.TouchEvent;
 import com.esotericsoftware.kryonet.Client;
@@ -18,10 +19,22 @@ public class UnirsePartidaScreen extends Screen {
 	Client client;
 	GameStates gamestates;
 	
+	Pixmap timePx;
+	
 	public UnirsePartidaScreen(Game game, Client client, GameStates gamestates) {
 		super(game);
 		this.client = client;
 		this.gamestates = gamestates;
+		
+		Assets.tenMinRed.scale(70, 70);
+	    Assets.fifteenMinRed.scale(70, 70);
+	    Assets.twentyMinRed.scale(70, 70);
+	    Assets.fifteenMinBlack.scale(70, 70);
+	    Assets.hughLayerRed.scale(280, 70);
+	    timePx = Assets.tenMinRed;
+	    
+	    
+	    //dedir informacion de la partida (equipo, miembros de equipo y tiempo)
 	}
 
 	@Override
@@ -33,13 +46,21 @@ public class UnirsePartidaScreen extends Screen {
         for(int i = 0; i < len; i++) {
             TouchEvent event = touchEvents.get(i);
             if(event.type == TouchEvent.TOUCH_UP) {
-                if(inBounds(event, 10, 400, Assets.back.getWidth(), Assets.back.getHeight()) ) {
+                //back
+            	if(inBounds(event, 10, 400, Assets.back.getWidth(), Assets.back.getHeight()) ) {
 //                    if(Settings.soundEnabled)
-                	this.game.setScreen(new MenuScreen(this.game, this.client, this.gamestates));
-                }
+            		this.game.setScreen(new MenuScreen(this.game, this.client, this.gamestates));
+            	}
             }
         }
 		
+        //define icono de tiempo
+        if(gamestates.timeMatch == 10) timePx = Assets.tenMinRed;   
+        if(gamestates.timeMatch == 15) timePx = Assets.fifteenMinRed;
+        if(gamestates.timeMatch == 20) timePx = Assets.twentyMinRed;
+	
+        //carga equipo en layers
+	
 	}
 
 	@Override
@@ -47,35 +68,26 @@ public class UnirsePartidaScreen extends Screen {
 		// TODO Auto-generated method stub
 		
 		Graphics g = game.getGraphics();
-        
         g.drawPixmap(Assets.background, 0, 0);
-        //g.drawPixmap(Assets.logo, 32, 28);
-        
-        Assets.twentyMinBlack.scale(70, 70);
-        Assets.twentyMinBlack.scale(70, 70);
-        Assets.twentyMinBlack.scale(70, 70);
-        Assets.fifteenMinBlack.scale(70, 70);
-        Assets.hughLayerRed.scale(280, 70);
-        
+        //muestra nombre de usuario
         g.drawPixmap(Assets.hughLayerRed, 30, 100);
-        g.drawPixmap(Assets.smallLayerRed, 130, 180);
-        g.drawPixmap(Assets.smallLayerRed, 130, 230);
-        g.drawPixmap(Assets.smallLayerRed, 130, 280);
-        g.drawText("Jugador1", 50, 130,Color.WHITE, 30);
-        g.drawText("Jugador2", 150, 210,Color.WHITE, 20);
-        g.drawText("Jugador3", 150, 260,Color.WHITE, 20);
-        g.drawText("Jugador4", 150, 310,Color.WHITE, 20);
-        
-        //texto de esperar partida
-        
+        g.drawText(gamestates.username, 50, 130,Color.WHITE, 30);
+        //muestra miembros del equipo
+        for(int i = 0; i < gamestates.team.size(); i++){
+        	g.drawPixmap(Assets.smallLayerRed, 130, 180+i*50);
+        	g.drawText(gamestates.team.get(i), 150, 210+ i*50,Color.WHITE, 30);
+        }
+        //back
         g.drawPixmap(Assets.back,10, 400);
-        g.drawPixmap(Assets.fifteenMinBlack, 190, 390);
-        
+        //tiempo
+        g.drawPixmap(timePx, 190, 390);
+        //texto de esperar partida
         g.drawText("Espere a que empieze ", 20, 360,Color.BLACK, 30);
         g.drawText("la partida", 20, 380,Color.BLACK, 30);
-        
+        //titulo
         g.drawText("Partida", 10, 50, Color.BLACK, 50);
-        g.drawText("'Nombre Adm'", 70, 90, Color.BLACK, 30);
+        //nombre de la sala
+        g.drawText("'"+gamestates.currMatch+"'", 70, 90, Color.BLACK, 30);
 	}
 
 	@Override

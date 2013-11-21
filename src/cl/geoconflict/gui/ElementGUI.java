@@ -1,6 +1,7 @@
 package cl.geoconflict.gui;
 
 import com.badlogic.androidgames.framework.Graphics;
+import com.badlogic.androidgames.framework.Pixmap;
 
 //interfaces de la que salen los botones o laminas de texto
 //pensada para agregar elementos al scrollbar
@@ -21,6 +22,7 @@ public interface ElementGUI {
 	public void draw(Graphics g); //referencia propia
 	//deibujo parcial referente a otro objeto
 	//par; recX y RexY, es el origen del rectangulo de la seleccion
-	public void draw(Graphics g,int dx,int dy, int srcX , int srcY, int srcW, int srcH); 
+	public void draw(Graphics g,int dx,int dy, int srcX , int srcY, int srcW, int srcH);
+	public void setPixmapLayer(Pixmap mediumLayerBlack); 
 	
 }
