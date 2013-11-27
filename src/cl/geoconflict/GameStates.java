@@ -1,6 +1,6 @@
 package cl.geoconflict;
 
-import java.io.IOException;
+
 import java.util.ArrayList;
 
 import org.apache.shiro.codec.Hex;
@@ -14,6 +14,7 @@ import com.badlogic.androidgames.framework.FileIO;
 
 import android.util.Log;
 
+import cl.geoconflict.gps.PositionGPS;
 import cl.geoconflict.utils.HashUtil;
 
 /*
@@ -31,6 +32,8 @@ public class GameStates {
 	public boolean roomJoined = false;
 	public boolean listReceived = false;
 	public boolean newPlayerList = false;
+	public boolean newUpdateRoom = false;
+	
 	public boolean loading;
 	
 	public String username;
@@ -39,13 +42,17 @@ public class GameStates {
 	
 	//listar sala -unirse
 	public ArrayList<String> array = new ArrayList<String>(); //listas de salas disponibles
-	public ArrayList<String> team = new ArrayList<String>();
+	public ArrayList<String> teamRed = new ArrayList<String>();
+	public ArrayList<String> teamBlack = new ArrayList<String>();
+	public String team;
 	public String currMatch;
 	
 	//crear partida
 	public int timeMatch;
-	public ArrayList<String> arrayUsers = new ArrayList<String>();
+	public ArrayList<String> arrayUsers = new ArrayList<String>(); //agregado primero a este arreglo despues separado en equipos
 	
+	//GPS
+	public PositionGPS gps;
 	
 	
 	//retorna objeto Json que se enviara al servidor para login
@@ -113,7 +120,7 @@ public class GameStates {
 		JSONArray list;
 		Log.d("debug - se asigno nueva lista de usuarios",obj.toString());
 		try {
-			list = (JSONArray) obj.get("lista");
+			list = (JSONArray) obj.get("playerList");
 			for (int i = 0; i < list.length(); i++) {
 				arrayUsers.add((String)list.get(i));
 			}
@@ -121,5 +128,70 @@ public class GameStates {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	//info que envia el tiempo y los miembros de ambos equipos
+	public JSONObject getRoomInfo() {
+		JSONObject obj = new JSONObject();
+		JSONArray one = new JSONArray();
+		JSONArray two = new JSONArray();
+		one.put(teamRed);
+		two.put(teamBlack);
+		try {
+			obj.put("time",timeMatch);
+			obj.put("teamRed",teamRed);
+			obj.put("teamBlack",teamBlack);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return obj;
+	}
+	
+	//funcion usada por los usuarios normales para actualizar
+	//las lista de equipo
+	public void setRoomUpdate(JSONObject obj){
+		JSONArray one = new JSONArray();
+		JSONArray two = new JSONArray();
+		try {
+			one = obj.getJSONArray("teamRed");
+			two = obj.getJSONArray("teamBlack");
+			timeMatch = obj.getInt("time");
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		for(int i = 0; i < one.length();i++){
+			try {
+				teamRed.add((String) one.get(i));
+				if((String) one.get(i) == username)
+					team = "red";
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		for(int i = 0; i < two.length();i++){
+			try {
+				teamRed.add((String) two.get(i));
+				if((String) two.get(i) == username)
+					team = "black";
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+	}
+
+	public ArrayList<String> getTeam(){
+		if(team.equals("red"))
+			return teamRed;
+		if(team.equals("red"))
+			return teamRed;
+		Log.d("ERROR","equipo null");
+			return null;
 	}
 }

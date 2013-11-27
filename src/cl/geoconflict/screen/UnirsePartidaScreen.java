@@ -1,11 +1,11 @@
 package cl.geoconflict.screen;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.graphics.Color;
 import cl.geoconflict.Assets;
 import cl.geoconflict.GameStates;
-import cl.geoconflict.MenuScreen;
 
 import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
@@ -18,8 +18,8 @@ public class UnirsePartidaScreen extends Screen {
 	
 	Client client;
 	GameStates gamestates;
-	
 	Pixmap timePx;
+	ArrayList<String> team;
 	
 	public UnirsePartidaScreen(Game game, Client client, GameStates gamestates) {
 		super(game);
@@ -32,9 +32,8 @@ public class UnirsePartidaScreen extends Screen {
 	    Assets.fifteenMinBlack.scale(70, 70);
 	    Assets.hughLayerRed.scale(280, 70);
 	    timePx = Assets.tenMinRed;
-	    
-	    
-	    //dedir informacion de la partida (equipo, miembros de equipo y tiempo)
+	
+	    team = null;
 	}
 
 	@Override
@@ -60,7 +59,11 @@ public class UnirsePartidaScreen extends Screen {
         if(gamestates.timeMatch == 20) timePx = Assets.twentyMinRed;
 	
         //carga equipo en layers
-	
+        if(gamestates.newUpdateRoom){
+        	//obtiene equipo para la ventana
+        	team = gamestates.getTeam();
+        	gamestates.newUpdateRoom = false;
+        }
 	}
 
 	@Override
@@ -72,11 +75,15 @@ public class UnirsePartidaScreen extends Screen {
         //muestra nombre de usuario
         g.drawPixmap(Assets.hughLayerRed, 30, 100);
         g.drawText(gamestates.username, 50, 130,Color.WHITE, 30);
-        //muestra miembros del equipo
-        for(int i = 0; i < gamestates.team.size(); i++){
-        	g.drawPixmap(Assets.smallLayerRed, 130, 180+i*50);
-        	g.drawText(gamestates.team.get(i), 150, 210+ i*50,Color.WHITE, 30);
+        
+        if(team != null){
+	        //muestra miembros del equipo
+	        for(int i = 0; i < team.size(); i++){ //tamaño de equipo
+	        	g.drawPixmap(Assets.smallLayerRed, 130, 180+i*50);
+	        	g.drawText(team.get(i), 150, 210+ i*50,Color.WHITE, 30);//nombre de jugadore equipo
+	        }
         }
+        
         //back
         g.drawPixmap(Assets.back,10, 400);
         //tiempo

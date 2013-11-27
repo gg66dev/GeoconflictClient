@@ -2,7 +2,6 @@ package cl.geoconflict.gui;
 
 import java.util.ArrayList;
 
-import android.util.Log;
 import cl.geoconflict.Assets;
 
 import com.badlogic.androidgames.framework.Graphics;

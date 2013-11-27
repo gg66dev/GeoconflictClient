@@ -24,8 +24,11 @@ public class MapaScreen extends Screen {
 	PlayerPoint playerPoints[];
 	int numPlayers = 3;
 	
+	GameStates gamestates;
+	
 	public MapaScreen(Game game, Client client, GameStates gamestates) {
 		super(game);
+		this.gamestates = gamestates;
 		
 		Assets.simpleAmmo.scale(90,90);
 		Assets.playerWhite.scale(140, 40);
@@ -33,7 +36,7 @@ public class MapaScreen extends Screen {
 		
 		// equipo, 0 es el jugador , 1 y 2 son los compa�eros
 		playerPoints = new PlayerPoint[numPlayers];
-		playerPoints[0] = new PlayerPoint(Assets.playerWhite, 20, 20, 1, 6);
+		playerPoints[0] = new PlayerPoint(Assets.playerWhite, 20, 20, 1, 6);//asset, w,h,row,col
 		playerPoints[1] = new PlayerPoint(Assets.playerGreen, 20, 20, 1, 6);
 		playerPoints[2] = new PlayerPoint(Assets.playerGreen, 20, 20, 1, 6);
 		
@@ -42,10 +45,15 @@ public class MapaScreen extends Screen {
 	
 	public void setArmaScreen(ArmaScreen armascreen, Clock clock, Player player)
 	{
+		Graphics g = game.getGraphics();
+		
 		this.arma = armascreen;
 		this.clockMatch = clock;
 		this.player = player;
 	
+		//asigan w,h de PlayerPoint y w,h de la view
+		this.player.setDimencion(20,20,g.getWidth(),g.getHeight());
+				
 		Assets.lifeplayer.scale(10,50);
 	}
 	
@@ -55,9 +63,15 @@ public class MapaScreen extends Screen {
 		// TODO Auto-generated method stub
 		List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
 		
+		//actualiza gps
+		gamestates.gps.onLocationChanged();
+		//actualiza player
+		player.update();
+		
+		
 		//se actualiza la posicion de los jugadores
 		//deberian ser coordenadas del servidor
-		playerPoints[0].setPosition(20,200);
+		playerPoints[0].setPosition(player.getX(),player.getY());
 		playerPoints[1].setPosition(200,200);
 		playerPoints[2].setPosition(150,300);
 		
@@ -105,10 +119,15 @@ public class MapaScreen extends Screen {
         g.drawTextRotate(clockMatch.getTime(), -50, 120, Color.WHITE,20, 90);
       
     	
+      //latitud y longitud (debug)
+        g.drawTextRotate("lat:"+gamestates.gps.getLatitud(), 150, 100, Color.GREEN,20, 90);
+        g.drawTextRotate("log:"+gamestates.gps.getLongitud(), 150, 120, Color.GREEN,20, 90);
+        
+        
     	//if bonus
       		
       	//vida
-      	for(int i = 0; i < player.getLifeCount(); i++)
+      	for(int i = 0; i < player.getHealth(); i++)
       		g.drawPixmap(Assets.lifeplayer, 170 + (i*15), 420);
       		
       

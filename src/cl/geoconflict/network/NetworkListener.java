@@ -1,9 +1,5 @@
 package cl.geoconflict.network;
 
-import java.util.Scanner;
-
-import org.apache.sling.commons.json.JSONArray;
-import org.apache.sling.commons.json.JSONException;
 
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
@@ -16,12 +12,10 @@ import cl.geoconflict.network.Network.*;
 public class NetworkListener extends Listener {
 	private Client client; // se emplea este cliente para enviar msg
 	GameStates gamestates;
-	private Scanner scanner;
 
 	public void init(GameStates gamestates, Client client) {
 		this.client = client;
 		this.gamestates = gamestates;
-		this.scanner = new Scanner(System.in);
 		client.setKeepAliveTCP(8000);
 	}
 
@@ -116,18 +110,17 @@ public class NetworkListener extends Listener {
 		if (o instanceof RequestListUser) {
 			Log.info("Lista de usuarios!!");
 			RequestListUser rlu = (RequestListUser) o;
-			gamestates.newPlayerList = true;
+			this.gamestates.newPlayerList = true;
 			this.gamestates.setListUsers(rlu.list);
 
 		}
 
-		// recive informacion de la sala
-		// listas usuarios de sala
-		if (o instanceof RequestMatchInfo) {
-			RequestMatchInfo rmi = (RequestMatchInfo) o;
-			/* game.setMatchInfo(rmi.matchInfo); */
-
+		// peticion de informacion usuario, para actualizar room
+		if (o instanceof RequestRoomUpdate) {
+			RequestRoomUpdate rru = (RequestRoomUpdate) o;
+			gamestates.newUpdateRoom = true;
+			gamestates.setRoomUpdate(rru.roomInfo);
+			
 		}
 	}
-
 }

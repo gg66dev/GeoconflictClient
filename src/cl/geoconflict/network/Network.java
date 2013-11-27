@@ -32,6 +32,7 @@ public class Network {
             kryo.register(RequestMatchInit.class);
             kryo.register(RequestMatchInfo.class);
             kryo.register(RequestUserInfo.class);
+            kryo.register(RequestRoomUpdate.class);
             
     }
 
@@ -89,6 +90,11 @@ public class Network {
      
      public static class RequestUserInfo{
     	 public JSONObject userInfo;
+    	 public String nameRoom;
+     }
+     
+     public static class RequestRoomUpdate{
+    	 public JSONObject roomInfo;
     	 public String nameRoom;
      }
 }

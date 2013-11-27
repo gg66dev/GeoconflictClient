@@ -3,15 +3,16 @@ package cl.geoconflict.screen;
 import java.util.List;
 
 import android.graphics.Color;
+import android.util.Log;
 import cl.geoconflict.Assets;
 import cl.geoconflict.GameStates;
-import cl.geoconflict.MenuScreen;
 import cl.geoconflict.gameplay.Clock;
+import cl.geoconflict.gameplay.Map;
 import cl.geoconflict.gameplay.Player;
 import cl.geoconflict.gui.ButtonGUI;
 import cl.geoconflict.gui.ScrollBar;
 import cl.geoconflict.network.Network.RequestCloseRoom;
-import cl.geoconflict.network.Network.RequestCreateRoom;
+import cl.geoconflict.network.Network.RequestRoomUpdate;
 
 import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
@@ -82,8 +83,12 @@ public class CrearPartidaScreen extends Screen {
 			}
 			//empezar partida
 			if(inBounds(event, 150, 400, Assets.empezar.getWidth(), Assets.empezar.getHeight()) ) {
+				//se crea mapa se asocia a Player y a gps
+				Map map = new Map();
+				gamestates.gps.addObserver(map);
+				
 				Clock clockMatch = new Clock(15); //p: tiempo partida
-        		Player player = new Player(20); //p: ammo
+				Player player = new Player(20,map,gamestates.gps); //p: ammo,mapa, gps
         		ArmaScreen arma = new ArmaScreen(game,client,gamestates);
         		MapaScreen mapa = new MapaScreen(game,client,gamestates);
         		arma.setMapaScreen(mapa,clockMatch,player);
@@ -111,26 +116,37 @@ public class CrearPartidaScreen extends Screen {
 				twentyMin = Assets.twentyMinRed;
 				gamestates.timeMatch = 20;
 			}
-			
-			//actualiza lista de player
-			if(gamestates.newPlayerList){
-				//le asigan al nuevo cualquier equipo
-				int n = scrollbar.size();
-				scrollbar.add(new ButtonGUI(Assets.mediumLayerRed,255,50));
-				scrollbar.GetElement(n).setName((gamestates.arrayUsers.get(n)));
-				n++;
-				//reordena equipos automaticamente de forma que quden casi del mismo tamaño
-				int j;
-				for(j=0; j < (n+1)/2;j++)
-					scrollbar.GetElement(j).setPixmapLayer(Assets.mediumLayerRed);
-				for(; j < n;j++)
-					scrollbar.GetElement(j).setPixmapLayer(Assets.mediumLayerBlack);
-				gamestates.newPlayerList = false;
-				
-				//informa cambios al servidor
-				
+		}
+	    
+		//actualiza lista de player
+		if(gamestates.newPlayerList){
+			Log.d("Debug-crear partida", "nuevo usuario ingreso a la sala");
+			//le asigan al nuevo cualquier equipo
+			int n = scrollbar.size();
+			scrollbar.add(new ButtonGUI(Assets.mediumLayerRed,255,50));
+			Log.d("debug-lista actual de usuarios",gamestates.arrayUsers.toString());
+			scrollbar.GetElement(n).setName((gamestates.arrayUsers.get(n)));
+			//n++;
+			//reordena equipos automaticamente de forma que quden casi del mismo tamaño
+			int j;
+			for(j=0; j < (n+1)/2;j++){
+				scrollbar.GetElement(j).setPixmapLayer(Assets.mediumLayerRed);
+				gamestates.teamRed.add(gamestates.arrayUsers.get(n));
 			}
-	    }
+			for(; j < n;j++){
+				scrollbar.GetElement(j).setPixmapLayer(Assets.mediumLayerBlack);
+				gamestates.teamBlack.add(gamestates.arrayUsers.get(n));
+			}
+			
+			//informa cambios al servidor y servidor informa cambios a otros jugadores
+			RequestRoomUpdate rmu = new RequestRoomUpdate();
+			rmu.nameRoom = gamestates.username;
+			rmu.roomInfo = gamestates.getRoomInfo();
+			client.sendTCP(rmu);
+			
+			//deja de ser una nueva lista
+			gamestates.newPlayerList = false;
+		}
 		
 	}
 

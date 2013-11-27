@@ -6,7 +6,6 @@ import java.util.List;
 import android.graphics.Color;
 import cl.geoconflict.Assets;
 import cl.geoconflict.GameStates;
-import cl.geoconflict.MenuScreen;
 import cl.geoconflict.gui.ButtonGUI;
 import cl.geoconflict.gui.ScrollBar;
 import cl.geoconflict.network.Network.RequestJoinRoom;

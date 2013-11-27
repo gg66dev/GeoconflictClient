@@ -22,20 +22,16 @@ public class ArmaScreen extends Screen {
 	Animation arma;
 	Clock clockMatch;
 	Player player;
-	
+	GameStates gamestates;
 	Client client;
 	
 	public ArmaScreen(Game game, Client client, GameStates gamestates) {
 		super(game);
 		this.client = client;
-	
+		this.gamestates = gamestates;
 		Assets.animationArma.scale(4900,450);
 		arma = new Animation(Assets.animationArma,175,450,27);
-		
-		// TODO arregla el problema del reloj nulo y el player nulo
-		this.clockMatch = new Clock(10);
-		this.player = new Player(10);
-		
+				
 		Assets.ammo.scale(90,200);
 		Assets.lifeplayer.scale(10,50);
 		Assets.radarSimple.scale(70,70);
@@ -56,7 +52,13 @@ public class ArmaScreen extends Screen {
 		List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
 		
 		//disminuye tiempo
-		clockMatch.update(deltaTime);		
+		clockMatch.update(deltaTime);
+		
+		//actualiza gps
+		gamestates.gps.onLocationChanged();
+		//actualiza player
+		player.update();
+		
 		
 		int len = touchEvents.size();
         for(int i = 0; i < len; i++) {
@@ -101,7 +103,7 @@ public class ArmaScreen extends Screen {
 		
 		//vida
 		g.drawText("vida", 190, 120, Color.WHITE, 20);
-		for(int i = 0; i < player.getLifeCount(); i++)
+		for(int i = 0; i < player.getHealth(); i++)
 			g.drawPixmap(Assets.lifeplayer, 190 + (i*15), 130);
 		
 		//tiempo

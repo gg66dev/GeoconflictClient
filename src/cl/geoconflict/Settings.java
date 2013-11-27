@@ -5,18 +5,9 @@ package cl.geoconflict;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-
-import org.apache.sling.commons.json.JSONException;
-import org.apache.sling.commons.json.JSONObject;
-import org.apache.sling.commons.json.io.JSONStringer;
-
-import android.content.Context;
 
 import com.badlogic.androidgames.framework.FileIO;
 
@@ -63,7 +54,6 @@ public class Settings {
 		}
 	}
 
-	
 	public static void writeSaltSettings(FileIO files, String input) {
 		BufferedWriter out = null;
 		try {
@@ -81,7 +71,6 @@ public class Settings {
 		}
 	}
 
-	
 	public static String ReadSaltSettings(FileIO files) {
 		BufferedReader in = null;
 		String salt;
@@ -103,5 +92,4 @@ public class Settings {
 		}
 		return null;
 	}
-
 }

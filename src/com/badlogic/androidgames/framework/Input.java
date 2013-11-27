@@ -71,4 +71,12 @@ public interface Input {
     public void showkeyboard();
     
     public void hidekeyboard();
+    
+    public double getLatitud();
+	
+    public double getLongitud();
+	
+	public boolean isLocationChanged();
+	
+	public void notLocationChanged();
 }
