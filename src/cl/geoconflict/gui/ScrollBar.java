@@ -173,4 +173,9 @@ public class ScrollBar {
 		return 0;
 	}
 	
+	public void clear(){
+		arrayElement.clear();
+		size = 0; 
+		length = 0;
+	}
 }

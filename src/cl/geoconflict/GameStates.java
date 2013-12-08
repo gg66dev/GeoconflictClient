@@ -31,8 +31,11 @@ public class GameStates {
 	public boolean roomAcepted = false;
 	public boolean roomJoined = false;
 	public boolean listReceived = false;
-	public boolean newPlayerList = false;
 	public boolean newUpdateRoom = false;
+	public boolean timeChange = false;
+	public boolean closeRoom = false;
+	public boolean initMatch = false;
+	public boolean hasTeam = false;
 	
 	public boolean loading;
 	
@@ -49,7 +52,6 @@ public class GameStates {
 	
 	//crear partida
 	public int timeMatch;
-	public ArrayList<String> arrayUsers = new ArrayList<String>(); //agregado primero a este arreglo despues separado en equipos
 	
 	//GPS
 	public PositionGPS gps;
@@ -116,27 +118,15 @@ public class GameStates {
 		}
 	}
 
-	public void setListUsers(JSONObject obj) {
-		JSONArray list;
-		Log.d("debug - se asigno nueva lista de usuarios",obj.toString());
-		try {
-			list = (JSONArray) obj.get("playerList");
-			for (int i = 0; i < list.length(); i++) {
-				arrayUsers.add((String)list.get(i));
-			}
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+	
 
 	//info que envia el tiempo y los miembros de ambos equipos
 	public JSONObject getRoomInfo() {
 		JSONObject obj = new JSONObject();
-		JSONArray one = new JSONArray();
-		JSONArray two = new JSONArray();
-		one.put(teamRed);
-		two.put(teamBlack);
+		JSONArray red = new JSONArray();
+		JSONArray black = new JSONArray();
+		red.put(teamRed);
+		black.put(teamBlack);
 		try {
 			obj.put("time",timeMatch);
 			obj.put("teamRed",teamRed);
@@ -153,10 +143,16 @@ public class GameStates {
 	public void setRoomUpdate(JSONObject obj){
 		JSONArray one = new JSONArray();
 		JSONArray two = new JSONArray();
+		//como actualizacion tiene nuevas listas se vacian las anteriores
+		teamRed.clear();
+		teamBlack.clear();		
+		
 		try {
 			one = obj.getJSONArray("teamRed");
 			two = obj.getJSONArray("teamBlack");
 			timeMatch = obj.getInt("time");
+			Log.d("debug","red" + one.toString());
+			Log.d("debug","black" + two.toString());
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -165,8 +161,10 @@ public class GameStates {
 		for(int i = 0; i < one.length();i++){
 			try {
 				teamRed.add((String) one.get(i));
-				if((String) one.get(i) == username)
+				if(one.get(i).equals(username)){
 					team = "red";
+					hasTeam = true;
+				}
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -175,9 +173,11 @@ public class GameStates {
 		
 		for(int i = 0; i < two.length();i++){
 			try {
-				teamRed.add((String) two.get(i));
-				if((String) two.get(i) == username)
+				teamBlack.add((String) two.get(i));
+				if(two.get(i).equals(username)){
 					team = "black";
+					hasTeam = true;
+				}
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -186,12 +186,18 @@ public class GameStates {
 		
 	}
 
-	public ArrayList<String> getTeam(){
-		if(team.equals("red"))
-			return teamRed;
-		if(team.equals("red"))
-			return teamRed;
-		Log.d("ERROR","equipo null");
-			return null;
+	public JSONObject getOrigin() {
+		JSONObject obj = new JSONObject();
+		Double longitud = gps.getLatitud();
+		Double latitud = gps.getLongitud();
+		try {
+			obj.put("latitud",latitud);
+			obj.put("longitud",longitud);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return obj;
 	}
+
 }

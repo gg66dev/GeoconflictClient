@@ -51,12 +51,14 @@ public class MenuScreen extends Screen{
 //                    if(Settings.soundEnabled);
                     // TODO
                 }
+                //crear patida
                 if(inBounds(event, 100, 180, 128, 64) ) {
 //                    if(Settings.soundEnabled)
                 	RequestCreateRoom rcr =  new RequestCreateRoom();
                 	rcr.userNameRoom = this.gameStates.username;
                 	this.client.sendTCP(rcr);
                 }
+                //unirse a una partida -listar mapas
                 if(inBounds(event, 100, 260, 128, 64) ) {
 //                    if(Settings.soundEnabled)
                 	RequestListRoom rcr =  new RequestListRoom();

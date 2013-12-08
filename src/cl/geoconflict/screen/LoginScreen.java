@@ -62,7 +62,7 @@ public class LoginScreen extends Screen {
 		client.addListener(nl);
 		client.start();
 		try {
-			client.connect(30000,"190.54.84.90",Network.portTCP, Network.portUDP);
+			client.connect(30000,"**.**.**.**",Network.portTCP, Network.portUDP);
 			//*cambiar timeout a 5000
 		} catch (IOException e) {
 			e.printStackTrace();

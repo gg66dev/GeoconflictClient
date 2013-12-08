@@ -33,27 +33,23 @@ public class NetworkListener extends Listener {
 		if (o instanceof RequestAnswer) {
 			Log.info("Request Answer!!");
 			RequestAnswer answer = ((RequestAnswer) o);
-
 			// pudo loguear
 			if (answer.id == RequestAnswer.answer_id.LOGIN && answer.accepted) {
 				Log.info("se a podigo Logear");
 				gamestates.logged = true;
 
 			}
-
 			// no se pudo loguear
 			if (answer.id == RequestAnswer.answer_id.LOGIN && !answer.accepted) {
 				Log.info("no se a podido logear");
 				gamestates.error = true;
 			}
-
 			// se creo sala
 			if (answer.id == RequestAnswer.answer_id.CREATEROOM
 					&& answer.accepted) {
 				Log.info("A creado una sala!!");
 				this.gamestates.roomAcepted = true;
 			}
-
 			// no se creo sala
 			if (answer.id == RequestAnswer.answer_id.CREATEROOM
 					&& !answer.accepted) {
@@ -62,14 +58,12 @@ public class NetworkListener extends Listener {
 						.println("no se puede crear sala - cerrando coneccion");
 				c.close();
 			}
-
 			// pudo unirse a una sala
 			if (answer.id == RequestAnswer.answer_id.JOINROOM
 					&& answer.accepted) {
 				System.out.println("Se unido a la sala");
 				gamestates.roomJoined = true;
 			}
-
 			// no se unio a una sala
 			if (answer.id == RequestAnswer.answer_id.JOINROOM
 					&& !answer.accepted) {
@@ -80,22 +74,18 @@ public class NetworkListener extends Listener {
 				client.sendTCP(rlr);
 
 			}
-
 			// inicio partida
 			if (answer.id == RequestAnswer.answer_id.MATCHINIT
 					&& answer.accepted) {
 				System.out.println("se inicio partida");
-				/* game.init(); */
+				gamestates.initMatch = true;
 			}
-
 			// no pudo inicio partida
 			if (answer.id == RequestAnswer.answer_id.MATCHINIT
 					&& !answer.accepted) {
 				System.out.println("no se a podido iniciar partida");
 			}
-
 		}
-
 		// lista salas disponibles
 		if (o instanceof RequestListRoom) {
 			RequestListRoom rlr = new RequestListRoom();
@@ -105,22 +95,26 @@ public class NetworkListener extends Listener {
 			this.gamestates.listReceived = true;
 			this.gamestates.setListRoom(rlr.list);
 		}
-
-		// listas usuarios de sala
-		if (o instanceof RequestListUser) {
-			Log.info("Lista de usuarios!!");
-			RequestListUser rlu = (RequestListUser) o;
-			this.gamestates.newPlayerList = true;
-			this.gamestates.setListUsers(rlu.list);
-
-		}
-
 		// peticion de informacion usuario, para actualizar room
 		if (o instanceof RequestRoomUpdate) {
 			RequestRoomUpdate rru = (RequestRoomUpdate) o;
+			Log.info("Se recivio update room!!");
 			gamestates.newUpdateRoom = true;
 			gamestates.setRoomUpdate(rru.roomInfo);
-			
+		}
+		//funciona tando al administrador que cierra sala
+		//como jugador que abandona sala
+		if (o instanceof RequestCloseRoom) {
+			gamestates.closeRoom = true;
+		}
+		//envia cambio de tiempo para actualizar servidor
+		//y avisa a los demas jugadores
+		if (o instanceof RequestChangeTime) {
+			Log.info("realizo cambio de tiempo");
+			RequestChangeTime rct = (RequestChangeTime) o;
+			Log.info("nuevo tiempo es "+ rct.timeMatch);
+			gamestates.timeMatch = Integer.parseInt(rct.timeMatch);
+			gamestates.timeChange = true;
 		}
 	}
 }

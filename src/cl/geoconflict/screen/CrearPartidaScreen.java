@@ -12,7 +12,8 @@ import cl.geoconflict.gameplay.Player;
 import cl.geoconflict.gui.ButtonGUI;
 import cl.geoconflict.gui.ScrollBar;
 import cl.geoconflict.network.Network.RequestCloseRoom;
-import cl.geoconflict.network.Network.RequestRoomUpdate;
+import cl.geoconflict.network.Network.RequestMatchInit;
+import cl.geoconflict.network.Network.RequestChangeTime;
 
 import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
@@ -37,10 +38,7 @@ public class CrearPartidaScreen extends Screen {
 		this.client = client;
 		this.gamestates = gamestates;
 	
-		//el primer jugador de la partida es el administrador
 		scrollbar = new ScrollBar(10, 90, 300, 170);
-		scrollbar.add(new ButtonGUI(Assets.mediumLayerRed,255,50));
-		scrollbar.GetElement(0).setName(this.gamestates.username);
 		
 		//escala las images
         Assets.tenMinBlack.scale(70, 70);
@@ -78,76 +76,110 @@ public class CrearPartidaScreen extends Screen {
 				RequestCloseRoom rcr =  new RequestCloseRoom();
             	rcr.userNameRoom = this.gamestates.username;
             	this.client.sendTCP(rcr);
-            	this.gamestates.roomAcepted = false;
-				this.game.setScreen(new MenuScreen(this.game, this.client,this.gamestates));
-			}
+            	break;
+            }
 			//empezar partida
 			if(inBounds(event, 150, 400, Assets.empezar.getWidth(), Assets.empezar.getHeight()) ) {
-				//se crea mapa se asocia a Player y a gps
-				Map map = new Map();
-				gamestates.gps.addObserver(map);
-				
-				Clock clockMatch = new Clock(15); //p: tiempo partida
-				Player player = new Player(20,map,gamestates.gps); //p: ammo,mapa, gps
-        		ArmaScreen arma = new ArmaScreen(game,client,gamestates);
-        		MapaScreen mapa = new MapaScreen(game,client,gamestates);
-        		arma.setMapaScreen(mapa,clockMatch,player);
-        		mapa.setArmaScreen(arma,clockMatch,player);
-        		this.game.setScreen(mapa);
+				RequestMatchInit rmi = new RequestMatchInit();
+				//no se envian los datos de la partida por que ya estan en el servidor
+				rmi.nameRoom = gamestates.username;
+				rmi.origin = gamestates.getOrigin();
+				client.sendTCP(rmi);
 			}
+			//cambio se realiza primero en el servidor
+			//gamestataes cambia cuando recive la confirmacion
 			//10 min
 			if(inBounds(event, 90, 320,Assets.tenMinBlack.getWidth(),Assets.tenMinBlack.getHeight())){
-				tenMin = Assets.tenMinRed;
-				fifteenMin = Assets.fifteenMinBlack;
-				twentyMin = Assets.twentyMinBlack;
-				gamestates.timeMatch = 10;
+				Log.d("debug","se preciono 10");
+				RequestChangeTime rct = new RequestChangeTime();
+				rct.timeMatch =""+ 10;
+				rct.nameRoom = gamestates.username;
+				client.sendTCP(rct);
 			}
 			//15 min
 			if(inBounds(event, 170, 320,Assets.tenMinBlack.getWidth(),Assets.tenMinBlack.getHeight())){
-				tenMin = Assets.tenMinBlack;
-				fifteenMin = Assets.fifteenMinRed;
-				twentyMin = Assets.twentyMinBlack;
-				gamestates.timeMatch = 15;
+				Log.d("debug","se preciono 15");
+				RequestChangeTime rct = new RequestChangeTime();
+				rct.timeMatch =""+ 15;
+				rct.nameRoom = gamestates.username;
+				client.sendTCP(rct);
 			}
 			//20 min
 			if(inBounds(event, 250, 320,Assets.tenMinBlack.getWidth(),Assets.tenMinBlack.getHeight())){
-				tenMin = Assets.tenMinBlack;
-				fifteenMin = Assets.fifteenMinBlack;
-				twentyMin = Assets.twentyMinRed;
-				gamestates.timeMatch = 20;
+				Log.d("debug","se preciono 20");
+				RequestChangeTime rct = new RequestChangeTime();
+				rct.timeMatch =""+ 20;
+				rct.nameRoom = gamestates.username;
+				client.sendTCP(rct);
 			}
 		}
 	    
+	    //nuevo player ingreso
 		//actualiza lista de player
-		if(gamestates.newPlayerList){
-			Log.d("Debug-crear partida", "nuevo usuario ingreso a la sala");
-			//le asigan al nuevo cualquier equipo
-			int n = scrollbar.size();
-			scrollbar.add(new ButtonGUI(Assets.mediumLayerRed,255,50));
-			Log.d("debug-lista actual de usuarios",gamestates.arrayUsers.toString());
-			scrollbar.GetElement(n).setName((gamestates.arrayUsers.get(n)));
-			//n++;
-			//reordena equipos automaticamente de forma que quden casi del mismo tamaño
-			int j;
-			for(j=0; j < (n+1)/2;j++){
-				scrollbar.GetElement(j).setPixmapLayer(Assets.mediumLayerRed);
-				gamestates.teamRed.add(gamestates.arrayUsers.get(n));
+		if(gamestates.newUpdateRoom){
+			scrollbar.clear();
+			int i = 0;
+			if(gamestates.teamRed.size() > 0){
+				for( String p : gamestates.teamRed ){
+					scrollbar.add(new ButtonGUI(Assets.mediumLayerRed,255,50));
+					scrollbar.GetElement(i).setName(p);
+					Log.d("debug","agregado "+p);
+					i++;
+				}
 			}
-			for(; j < n;j++){
-				scrollbar.GetElement(j).setPixmapLayer(Assets.mediumLayerBlack);
-				gamestates.teamBlack.add(gamestates.arrayUsers.get(n));
+			if(gamestates.teamBlack.size() > 0){
+				for( String p : gamestates.teamBlack ){
+					scrollbar.add(new ButtonGUI(Assets.mediumLayerBlack,255,50));
+					scrollbar.GetElement(i).setName(p);
+					Log.d("debug","agregado "+p);
+					i++;
+				}
 			}
-			
-			//informa cambios al servidor y servidor informa cambios a otros jugadores
-			RequestRoomUpdate rmu = new RequestRoomUpdate();
-			rmu.nameRoom = gamestates.username;
-			rmu.roomInfo = gamestates.getRoomInfo();
-			client.sendTCP(rmu);
 			
 			//deja de ser una nueva lista
-			gamestates.newPlayerList = false;
+			gamestates.newUpdateRoom = false;
 		}
 		
+		//cambio de tiempo
+		if(gamestates.timeChange){
+			if(gamestates.timeMatch == 10){
+				tenMin = Assets.tenMinRed;
+				fifteenMin = Assets.fifteenMinBlack;
+				twentyMin = Assets.twentyMinBlack;
+			}
+			if(gamestates.timeMatch == 15){
+				tenMin = Assets.tenMinBlack;
+				fifteenMin = Assets.fifteenMinRed;
+				twentyMin = Assets.twentyMinBlack;
+			}
+			if(gamestates.timeMatch == 20){
+				tenMin = Assets.tenMinBlack;
+				fifteenMin = Assets.fifteenMinBlack;
+				twentyMin = Assets.twentyMinRed;
+			}
+			gamestates.timeChange = false;
+		}
+			
+		
+		
+		//se inicia la partida
+		if(gamestates.initMatch){
+			//se crea mapa se asocia a Player y a gps
+			Map map = new Map();
+			gamestates.gps.addObserver(map);
+			Clock clockMatch = new Clock(15); //p: tiempo partida
+			Player player = new Player(20,map,gamestates.gps); //p: ammo,mapa, gps
+    		ArmaScreen arma = new ArmaScreen(game,client,gamestates);
+    		MapaScreen mapa = new MapaScreen(game,client,gamestates);
+    		arma.setMapaScreen(mapa,clockMatch,player);
+    		mapa.setArmaScreen(arma,clockMatch,player);
+    		this.game.setScreen(mapa);
+		}
+		// cierre de partida, salen a mainMenu
+		if (gamestates.closeRoom) {
+			this.gamestates.roomAcepted = false;
+			this.game.setScreen(new MenuScreen(this.game, this.client,this.gamestates));
+		}
 	}
 
 	
