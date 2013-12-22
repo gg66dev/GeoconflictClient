@@ -178,6 +178,7 @@ public class CrearPartidaScreen extends Screen {
 		// cierre de partida, salen a mainMenu
 		if (gamestates.closeRoom) {
 			this.gamestates.roomAcepted = false;
+			this.gamestates.closeRoom = false;
 			this.game.setScreen(new MenuScreen(this.game, this.client,this.gamestates));
 		}
 	}

@@ -30,8 +30,8 @@ public class Game  {
 			while(true){
 				//envia informacion de usuario
 				//informacion es enviada en un objeto json
-				RequestUserInfo rui = new RequestUserInfo();
-				rui.userInfo = getJSonPlayer();
+				RequestPlayerInfo rui = new RequestPlayerInfo();
+				rui.playerInfo = getJSonPlayer();
 				rui.nameRoom = player.currRoom; //indica a la sala que actualizara
 				client.sendUDP(rui);
 			

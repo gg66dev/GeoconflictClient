@@ -106,6 +106,7 @@ public class NetworkListener extends Listener {
 		//como jugador que abandona sala
 		if (o instanceof RequestCloseRoom) {
 			gamestates.closeRoom = true;
+			gamestates.roomAcepted = false;
 		}
 		//envia cambio de tiempo para actualizar servidor
 		//y avisa a los demas jugadores
