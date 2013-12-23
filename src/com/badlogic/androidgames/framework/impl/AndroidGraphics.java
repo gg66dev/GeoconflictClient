@@ -9,6 +9,7 @@ import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Rect;
@@ -128,6 +129,20 @@ public class AndroidGraphics implements Graphics {
         canvas.drawBitmap(((AndroidPixmap)pixmap).bitmap, x, y, null);
     }
 
+    @Override
+    public void drawPixmap(Pixmap pixmap, int x, int y,float rotateAngle){
+        
+    	Matrix matrix = new Matrix();
+    	Bitmap img = ((AndroidPixmap)pixmap).bitmap;
+    	
+    	matrix.reset();
+    	matrix.setTranslate(x, y);
+    	matrix.postRotate(rotateAngle, x+img.getWidth()/2, y+img.getHeight()/2); 
+    	canvas.drawBitmap(img, matrix, null);
+    	
+    }
+    
+    
     @Override
     public void drawText(String text,int x, int y, int color, int size){
     	paint.setColor(color); 

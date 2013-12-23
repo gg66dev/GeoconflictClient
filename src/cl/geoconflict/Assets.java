@@ -52,5 +52,5 @@ public class Assets {
     public static Pixmap geogrilla;
     public static Pixmap playerWhite;
     public static Pixmap playerGreen;
-    
+    public static Pixmap redArrow;
 }

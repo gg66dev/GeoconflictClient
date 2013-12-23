@@ -14,6 +14,7 @@ public class AndroidInput implements Input {
     KeyboardHandler keyHandler;
     TouchHandler touchHandler;
     LocationHandler locationHandler;
+    OrientationHandler orientationHandler;
     
     //agregado para mostrar soft keyboard
     InputMethodManager inputManager;
@@ -24,6 +25,7 @@ public class AndroidInput implements Input {
         accelHandler = new AccelerometerHandler(context);
         keyHandler = new KeyboardHandler(view);
         locationHandler = new LocationHandler(context); //GPS
+        orientationHandler = new OrientationHandler(context);//orientacion
         inputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         this.view = view;
         
@@ -105,5 +107,16 @@ public class AndroidInput implements Input {
     @Override
     public void notLocationChanged(){
 		locationHandler.notLocationChanged();
+	}
+    
+	@Override
+	public float getDirection() {
+		return orientationHandler.getDirection();
+	}
+
+
+	@Override
+	public boolean isSensorRunning() {
+		return orientationHandler.isSensorRunning();
 	}
 }

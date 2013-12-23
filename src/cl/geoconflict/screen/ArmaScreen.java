@@ -8,6 +8,7 @@ import cl.geoconflict.GameStates;
 import cl.geoconflict.animation.Animation;
 import cl.geoconflict.gameplay.Clock;
 import cl.geoconflict.gameplay.Player;
+import cl.geoconflict.network.Network.RequestShoot;
 
 import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
@@ -54,8 +55,9 @@ public class ArmaScreen extends Screen {
 		//disminuye tiempo
 		clockMatch.update(deltaTime);
 		
-		//actualiza gps
+		//actualiza gps y orientacion
 		gamestates.gps.onLocationChanged();
+		gamestates.direccion = game.getInput().getDirection();
 		//actualiza player
 		player.update();
 		
@@ -71,6 +73,12 @@ public class ArmaScreen extends Screen {
             			arma.shoot();
             			player.addScore(10);
             			player.restAmmo();
+            			
+            			//envio de posicion y orientacion al servidor
+            			RequestShoot rs = new RequestShoot();
+            			rs.nameRoom = gamestates.currMatch;
+            			rs.shootInfo = gamestates.getShootInfo();
+            			client.sendUDP(rs);
             	}
             	if(inBounds(event, 0, 400 , 70, 70)) {
             		game.setScreen(mapa);

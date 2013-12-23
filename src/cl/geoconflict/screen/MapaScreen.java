@@ -33,6 +33,7 @@ public class MapaScreen extends Screen {
 		Assets.simpleAmmo.scale(90,90);
 		Assets.playerWhite.scale(140, 40);
 		Assets.playerGreen.scale(140, 40);
+		Assets.redArrow.scale(20, 20);
 		
 		// equipo, 0 es el jugador , 1 y 2 son los compa�eros
 		playerPoints = new PlayerPoint[numPlayers];
@@ -63,8 +64,9 @@ public class MapaScreen extends Screen {
 		// TODO Auto-generated method stub
 		List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
 		
-		//actualiza gps
+		//actualiza gps y orientacion
 		gamestates.gps.onLocationChanged();
+		gamestates.direccion = game.getInput().getDirection();
 		//actualiza player
 		player.update();
 		
@@ -119,9 +121,11 @@ public class MapaScreen extends Screen {
         g.drawTextRotate(clockMatch.getTime(), -50, 120, Color.WHITE,20, 90);
       
     	
-      //latitud y longitud (debug)
+        //latitud y longitud , orientacion (debug)
         g.drawTextRotate("lat:"+gamestates.gps.getLatitud(), 150, 100, Color.GREEN,20, 90);
         g.drawTextRotate("log:"+gamestates.gps.getLongitud(), 150, 120, Color.GREEN,20, 90);
+        g.drawTextRotate("dir:"+gamestates.direccion, 150, 140, Color.GREEN,20, 90);
+        
         
         
     	//if bonus
@@ -130,7 +134,10 @@ public class MapaScreen extends Screen {
       	for(int i = 0; i < player.getHealth(); i++)
       		g.drawPixmap(Assets.lifeplayer, 170 + (i*15), 420);
       		
-      
+       
+      	//prueba de giro jugador 0
+      	playerPoints[0].setRotation(gamestates.direccion);
+      	
       	
       	//mostrar jugadores
       	for(int i = 0; i < numPlayers ; i++)

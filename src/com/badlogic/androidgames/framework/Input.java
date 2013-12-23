@@ -79,4 +79,8 @@ public interface Input {
 	public boolean isLocationChanged();
 	
 	public void notLocationChanged();
+	
+	public float getDirection();
+	
+	public boolean isSensorRunning(); 
 }

@@ -70,8 +70,9 @@ public class ConnectionScreen extends Screen {
         Assets.geogrilla = g.newPixmap("arma-mapa/geogrilla.jpg", PixmapFormat.ARGB4444);
         Assets.playerWhite = g.newPixmap("arma-mapa/playerWhite.jpg", PixmapFormat.ARGB4444);
         Assets.simpleAmmo = g.newPixmap("arma-mapa/simpleAmmo.jpg", PixmapFormat.ARGB4444);
-        Assets.playerWhite = g.newPixmap("arma-mapa/playerWhite.jpg", PixmapFormat.ARGB4444);
-        Assets.playerGreen = g.newPixmap("arma-mapa/playerGreen.jpg", PixmapFormat.ARGB4444);
+        Assets.playerWhite = g.newPixmap("arma-mapa/playerWhite.png", PixmapFormat.ARGB4444);
+        Assets.playerGreen = g.newPixmap("arma-mapa/playerGreen.png", PixmapFormat.ARGB4444);
+        Assets.redArrow = g.newPixmap("arma-mapa/redArrow.png", PixmapFormat.ARGB4444);
         
         Settings.load(game.getFileIO());
         game.setScreen(new MenuScreen(this.game, this.client, this.gamestates));

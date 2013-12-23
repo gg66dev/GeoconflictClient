@@ -1,5 +1,7 @@
 package cl.geoconflict.animation;
 
+import cl.geoconflict.Assets;
+
 import com.badlogic.androidgames.framework.Graphics;
 import com.badlogic.androidgames.framework.Pixmap;
 
@@ -14,6 +16,7 @@ public class PlayerPoint {
 	int numCols;
 	float lapse = 0;
 	int row, col; //funcionan de index frame
+	public float rotate = 0.0f;
 	
 	
 	public PlayerPoint(Pixmap pixmap, int widthFrame, int heightFrame, int numRows, int numCols){
@@ -27,6 +30,20 @@ public class PlayerPoint {
 		row = 0;
 		col = 0;
 	}
+	
+	/**
+	 * pensado solo para mostrar la orientacion en el mapa.
+	 * como la pantalla en modo mapa se pone en horizontal, para
+	 * que el norte quede apuntando hacia las estadisticas de la 
+	 * pantalla (hacia arriba) se hace un ajuste de 180°
+	 * **/
+	public void setRotation(float rotation){
+		if(  rotation + 180   > 360 )
+			this.rotate = rotation - 180  ;
+		else
+			this.rotate = rotation + 180;
+	}
+	
 	
 	public void setPosition(int x, int y)
 	{
@@ -55,7 +72,8 @@ public class PlayerPoint {
 	public void draw(Graphics g){
 		
 		g.drawPixmap(pixmap, x, y, width*col ,height*row , width , height );
-		
+		//orientacion es mostrada como una fecha roja
+		g.drawPixmap(Assets.redArrow, x, y, rotate );
 	}
 	
 }

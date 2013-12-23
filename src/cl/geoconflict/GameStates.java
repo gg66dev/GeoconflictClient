@@ -53,9 +53,9 @@ public class GameStates {
 	//crear partida
 	public int timeMatch;
 	
-	//GPS
+	//GPS y orientacion
 	public PositionGPS gps;
-	
+	public float direccion;
 	
 	//retorna objeto Json que se enviara al servidor para login
 	public JSONObject getJSONLogin(FileIO files){
@@ -200,4 +200,19 @@ public class GameStates {
 		return obj;
 	}
 
+	public JSONObject getShootInfo() {
+		JSONObject obj = new JSONObject();
+		Double longitud = gps.getLatitud();
+		Double latitud = gps.getLongitud();
+		try {
+			obj.put("latitud",latitud);
+			obj.put("longitud",longitud);
+			obj.put("direccion", direccion); //variable de clase (float)
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return obj;
+	}
+	
 }
