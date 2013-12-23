@@ -45,7 +45,8 @@ public class StartScreen extends Screen {
             	if(inBounds(event, 100, 330, 128, 64) ) {
                 	// TODO
 //                    if(Settings.soundEnabled)
-                	game.setScreen(new HelpScreen(game));
+                	//game.setScreen(new HelpScreen(game));
+            		System.exit(0);
                 }
             	
             }
@@ -59,7 +60,8 @@ public class StartScreen extends Screen {
         g.drawPixmap(Assets.background, 0, 0);
         g.drawPixmap(Assets.design, 32, 28);
         g.drawPixmap(Assets.start, 100, 250);
-        g.drawPixmap(Assets.help, 100, 330);
+        //g.drawPixmap(Assets.help, 100, 330);
+        g.drawPixmap(Assets.exit, 100, 330);
         
         if(Settings.soundEnabled){
             g.drawPixmap(Assets.sound, 0, g.getHeight()-64, 0, 0, 64, 64);

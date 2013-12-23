@@ -24,6 +24,7 @@ public class Assets {
     public static Pixmap join_match;
     public static Pixmap back;
     public static Pixmap register;
+    public static Pixmap exit;
     
     //crear partida - buscar partida - unirse partida
     public static Pixmap tenMinBlack; 
