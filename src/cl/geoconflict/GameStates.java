@@ -14,7 +14,6 @@ import com.badlogic.androidgames.framework.FileIO;
 
 import android.util.Log;
 
-import cl.geoconflict.gps.PositionGPS;
 import cl.geoconflict.utils.HashUtil;
 
 /*
@@ -54,8 +53,10 @@ public class GameStates {
 	public int timeMatch;
 	
 	//GPS y orientacion
-	public PositionGPS gps;
+	//public PositionGPS gps;
 	public float direccion;
+	public double latitud;
+	public double longitud;
 	
 	//retorna objeto Json que se enviara al servidor para login
 	public JSONObject getJSONLogin(FileIO files){
@@ -186,10 +187,10 @@ public class GameStates {
 		
 	}
 
-	public JSONObject getOrigin() {
+	public JSONObject getCurrCoords() {
 		JSONObject obj = new JSONObject();
-		Double longitud = gps.getLatitud();
-		Double latitud = gps.getLongitud();
+		//Double longitud = gps.getLatitud();
+		//Double latitud = gps.getLongitud();
 		try {
 			obj.put("latitud",latitud);
 			obj.put("longitud",longitud);
@@ -202,12 +203,12 @@ public class GameStates {
 
 	public JSONObject getShootInfo() {
 		JSONObject obj = new JSONObject();
-		Double longitud = gps.getLatitud();
-		Double latitud = gps.getLongitud();
+		//Double longitud = gps.getLatitud();
+		//Double latitud = gps.getLongitud();
 		try {
 			obj.put("latitud",latitud);
 			obj.put("longitud",longitud);
-			obj.put("direccion", direccion); //variable de clase (float)
+			obj.put("direccion", (double)direccion); //variable de clase (float)
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -21,7 +21,8 @@ public class Player {
 	private int screenHeight;
 	
 	
-	public Player(int ammo, Map map, PositionGPS gps){
+	//public Player(int ammo, Map map, PositionGPS gps){
+	public Player(int ammo, Map map){
 		health = 10;
 		iAmmo = ammo;
 		iScore = 0;
@@ -104,12 +105,12 @@ public class Player {
 	}
 	
 	/** Actualiza el movimiento del jugador en el juego */
-	public void update(){
-		if( this.gps.getX() != 0 || this.gps.getY() != 0){
-			this.x = (int) (this.screenWidth/2 - this.width/2 +
-					( ( (int) this.gps.getX() ) - this.map.getInitialX()) * SPEED );
-			this.y = (int) (this.screenHeight/2 - this.height/2 + 
-					( ( (int) this.gps.getY() ) - this.map.getInitialY()) * SPEED );
-		}
-	}
+//	public void update(){
+//		if( this.gps.getX() != 0 || this.gps.getY() != 0){
+//			this.x = (int) (this.screenWidth/2 - this.width/2 +
+//					( ( (int) this.gps.getX() ) - this.map.getInitialX()) * SPEED );
+//			this.y = (int) (this.screenHeight/2 - this.height/2 + 
+//					( ( (int) this.gps.getY() ) - this.map.getInitialY()) * SPEED );
+//		}
+//	}
 }

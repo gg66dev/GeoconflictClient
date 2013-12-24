@@ -73,6 +73,7 @@ public class MenuScreen extends Screen{
         }
         
         if(this.gameStates.roomAcepted){
+        	this.gameStates.currMatch = this.gameStates.username;
         	this.game.setScreen(new CrearPartidaScreen(this.game, this.client, this.gameStates));
         }
         if(this.gameStates.listReceived){

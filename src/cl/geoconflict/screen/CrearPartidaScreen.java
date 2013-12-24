@@ -83,7 +83,7 @@ public class CrearPartidaScreen extends Screen {
 				RequestMatchInit rmi = new RequestMatchInit();
 				//no se envian los datos de la partida por que ya estan en el servidor
 				rmi.nameRoom = gamestates.username;
-				rmi.origin = gamestates.getOrigin();
+				rmi.origin = gamestates.getCurrCoords();
 				client.sendTCP(rmi);
 			}
 			//cambio se realiza primero en el servidor
@@ -166,9 +166,9 @@ public class CrearPartidaScreen extends Screen {
 		if(gamestates.initMatch){
 			//se crea mapa se asocia a Player y a gps
 			Map map = new Map();
-			gamestates.gps.addObserver(map);
+			//gamestates.gps.addObserver(map);
 			Clock clockMatch = new Clock(15); //p: tiempo partida
-			Player player = new Player(20,map,gamestates.gps); //p: ammo,mapa, gps
+			Player player = new Player(20,map); //p: ammo,mapa, gps
     		ArmaScreen arma = new ArmaScreen(game,client,gamestates);
     		MapaScreen mapa = new MapaScreen(game,client,gamestates);
     		arma.setMapaScreen(mapa,clockMatch,player);

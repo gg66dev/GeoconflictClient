@@ -8,7 +8,7 @@ import cl.geoconflict.GameStates;
 import cl.geoconflict.animation.Animation;
 import cl.geoconflict.gameplay.Clock;
 import cl.geoconflict.gameplay.Player;
-import cl.geoconflict.network.Network.RequestShoot;
+import cl.geoconflict.network.Network.*;
 
 import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
@@ -56,10 +56,25 @@ public class ArmaScreen extends Screen {
 		clockMatch.update(deltaTime);
 		
 		//actualiza gps y orientacion
-		gamestates.gps.onLocationChanged();
+		//gamestates.gps.onLocationChanged();
 		gamestates.direccion = game.getInput().getDirection();
 		//actualiza player
-		player.update();
+		//player.update();
+		
+		
+		//cuando se actualiza GPS se envia log y lat al servidor
+		if(game.getInput().isLocationChanged()){
+			gamestates.latitud = game.getInput().getLatitud();
+			gamestates.longitud = game.getInput().getLongitud(); 
+			
+			RequestNewCoord rnc = new RequestNewCoord();
+			rnc.nameRoom = gamestates.currMatch;
+			rnc.newCoordInfo = gamestates.getCurrCoords();
+			client.sendUDP(rnc);
+			
+			game.getInput().notLocationChanged();
+		}
+		
 		
 		
 		int len = touchEvents.size();

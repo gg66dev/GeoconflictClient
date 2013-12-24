@@ -32,6 +32,7 @@ public class Network {
         kryo.register(RequestMatchInfo.class);
         kryo.register(RequestPlayerInfo.class);
         kryo.register(RequestShoot.class);
+        kryo.register(RequestNewCoord.class);
         kryo.register(RequestRoomUpdate.class);
         kryo.register(RequestLeaveRoom.class);
         kryo.register(RequestChangeTime.class);
@@ -123,6 +124,11 @@ public class Network {
       */
      public static class RequestShoot{
     	 public JSONObject shootInfo;
+    	 public String nameRoom;
+     }
+     //actualiza servidor con nueva coordanada cada vez que llega
+     public static class RequestNewCoord{
+    	 public JSONObject newCoordInfo;
     	 public String nameRoom;
      }
      //actualiza informacion de la sala cuando se esta gestionano la partida

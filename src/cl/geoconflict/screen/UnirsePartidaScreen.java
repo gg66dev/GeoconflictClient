@@ -84,9 +84,9 @@ public class UnirsePartidaScreen extends Screen {
 		if (gamestates.initMatch) {
 			// se crea mapa se asocia a Player y a gps
 			Map map = new Map();
-			gamestates.gps.addObserver(map);
+			//gamestates.gps.addObserver(map);
 			Clock clockMatch = new Clock(15); // p: tiempo partida
-			Player player = new Player(20, map, gamestates.gps); // p:
+			Player player = new Player(20, map); // p:
 																	// ammo,mapa,
 																	// gps
 			ArmaScreen arma = new ArmaScreen(game, client, gamestates);

@@ -13,7 +13,6 @@ import android.util.Log;
 import cl.geoconflict.Assets;
 import cl.geoconflict.GameStates;
 import cl.geoconflict.Settings;
-import cl.geoconflict.gps.PositionGPS;
 import cl.geoconflict.gui.PasswordBox;
 import cl.geoconflict.gui.TextBox;
 import cl.geoconflict.network.Network;
@@ -54,7 +53,7 @@ public class LoginScreen extends Screen {
 		client = new Client();
 		gamestates = new GameStates();
 		//crea gps - gps se activa con el framework-input
-		gamestates.gps = new PositionGPS(game);
+		//gamestates.gps = new PositionGPS(game);
     	
 		Network.register(client);
 		this.nl = new NetworkListener();

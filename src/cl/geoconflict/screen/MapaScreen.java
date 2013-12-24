@@ -8,6 +8,7 @@ import cl.geoconflict.GameStates;
 import cl.geoconflict.animation.PlayerPoint;
 import cl.geoconflict.gameplay.Clock;
 import cl.geoconflict.gameplay.Player;
+import cl.geoconflict.network.Network.RequestNewCoord;
 
 import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
@@ -20,6 +21,7 @@ public class MapaScreen extends Screen {
 	ArmaScreen arma = null;
 	Clock clockMatch = null; //p: tiempo partida
 	Player player = null; //p: ammo
+	Client client;
 	
 	PlayerPoint playerPoints[];
 	int numPlayers = 3;
@@ -41,7 +43,7 @@ public class MapaScreen extends Screen {
 		playerPoints[1] = new PlayerPoint(Assets.playerGreen, 20, 20, 1, 6);
 		playerPoints[2] = new PlayerPoint(Assets.playerGreen, 20, 20, 1, 6);
 		
-		
+		this.client = client;
 	}
 	
 	public void setArmaScreen(ArmaScreen armascreen, Clock clock, Player player)
@@ -65,11 +67,25 @@ public class MapaScreen extends Screen {
 		List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
 		
 		//actualiza gps y orientacion
-		gamestates.gps.onLocationChanged();
+		//gamestates.gps.onLocationChanged();
 		gamestates.direccion = game.getInput().getDirection();
 		//actualiza player
-		player.update();
+		//player.update();
 		
+		
+		//cuando se actualiza GPS se envia log y lat al servidor
+		if(game.getInput().isLocationChanged()){
+			gamestates.latitud = game.getInput().getLatitud();
+			gamestates.longitud = game.getInput().getLongitud(); 
+			
+			RequestNewCoord rnc = new RequestNewCoord();
+			rnc.nameRoom = gamestates.currMatch;
+			rnc.newCoordInfo = gamestates.getCurrCoords();
+			client.sendUDP(rnc);
+			
+			game.getInput().notLocationChanged();
+		}
+
 		
 		//se actualiza la posicion de los jugadores
 		//deberian ser coordenadas del servidor
@@ -122,8 +138,8 @@ public class MapaScreen extends Screen {
       
     	
         //latitud y longitud , orientacion (debug)
-        g.drawTextRotate("lat:"+gamestates.gps.getLatitud(), 150, 100, Color.GREEN,20, 90);
-        g.drawTextRotate("log:"+gamestates.gps.getLongitud(), 150, 120, Color.GREEN,20, 90);
+        g.drawTextRotate("lat:"+gamestates.latitud, 150, 100, Color.GREEN,20, 90);
+        g.drawTextRotate("log:"+gamestates.longitud, 150, 120, Color.GREEN,20, 90);
         g.drawTextRotate("dir:"+gamestates.direccion, 150, 140, Color.GREEN,20, 90);
         
         
