@@ -1,6 +1,8 @@
 package cl.geoconflict.network;
 
 
+import org.apache.sling.commons.json.JSONException;
+
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
@@ -11,11 +13,11 @@ import cl.geoconflict.network.Network.*;
 
 public class NetworkListener extends Listener {
 	private Client client; // se emplea este cliente para enviar msg
-	GameStates gamestates;
+	GameStates gameStates;
 
-	public void init(GameStates gamestates, Client client) {
+	public void init(GameStates gameStates, Client client) {
 		this.client = client;
-		this.gamestates = gamestates;
+		this.gameStates = gameStates;
 		client.setKeepAliveTCP(8000);
 	}
 
@@ -28,7 +30,7 @@ public class NetworkListener extends Listener {
 	}
 
 	public void received(Connection c, Object o) {
-		System.out.println("recivio request");
+		Log.debug("recivio request");
 
 		if (o instanceof RequestAnswer) {
 			Log.info("Request Answer!!");
@@ -36,86 +38,90 @@ public class NetworkListener extends Listener {
 			// pudo loguear
 			if (answer.id == RequestAnswer.answer_id.LOGIN && answer.accepted) {
 				Log.info("se a podigo Logear");
-				gamestates.logged = true;
+				gameStates.logged = true;
 
-			}
-			// no se pudo loguear
-			if (answer.id == RequestAnswer.answer_id.LOGIN && !answer.accepted) {
+			} else if (answer.id == RequestAnswer.answer_id.LOGIN && !answer.accepted) {
+				// no se pudo loguear
 				Log.info("no se a podido logear");
-				gamestates.error = true;
-			}
-			// se creo sala
-			if (answer.id == RequestAnswer.answer_id.CREATEROOM
+				gameStates.error = true;
+			} else if (answer.id == RequestAnswer.answer_id.CREATEROOM
 					&& answer.accepted) {
+				// se creo sala
 				Log.info("A creado una sala!!");
-				this.gamestates.roomAcepted = true;
-			}
-			// no se creo sala
-			if (answer.id == RequestAnswer.answer_id.CREATEROOM
+				this.gameStates.roomAcepted = true;
+			} else if (answer.id == RequestAnswer.answer_id.CREATEROOM
 					&& !answer.accepted) {
-				// caso que no se pueda crear sala
+				// no se creo sala
 				System.out
 						.println("no se puede crear sala - cerrando coneccion");
 				c.close();
-			}
-			// pudo unirse a una sala
-			if (answer.id == RequestAnswer.answer_id.JOINROOM
+			}else if (answer.id == RequestAnswer.answer_id.JOINROOM
 					&& answer.accepted) {
+				// pudo unirse a una sala
 				System.out.println("Se unido a la sala");
-				gamestates.roomJoined = true;
-			}
-			// no se unio a una sala
-			if (answer.id == RequestAnswer.answer_id.JOINROOM
+				gameStates.roomJoined = true;
+			}else if (answer.id == RequestAnswer.answer_id.JOINROOM
 					&& !answer.accepted) {
+				// no se unio a una sala
 				System.out
 						.println("no se a podido unir a la sala,seleccione otra:");
 				/* game.setRoom("none"); // borra campo asignado en la peticion */
 				RequestListRoom rlr = new RequestListRoom();
 				client.sendTCP(rlr);
 
-			}
-			// inicio partida
-			if (answer.id == RequestAnswer.answer_id.MATCHINIT
+			}else if (answer.id == RequestAnswer.answer_id.MATCHINIT
 					&& answer.accepted) {
-				System.out.println("se inicio partida");
-				gamestates.initMatch = true;
-			}
-			// no pudo inicio partida
-			if (answer.id == RequestAnswer.answer_id.MATCHINIT
+				// inicio partida
+				Log.info("Se inicia la partida");
+				Log.debug("Answer positions: " + answer.positions );
+				this.gameStates.initMatch( Integer.valueOf(answer.numPlayers), answer.positions );
+			}else if (answer.id == RequestAnswer.answer_id.MATCHINIT
 					&& !answer.accepted) {
-				System.out.println("no se a podido iniciar partida");
+				// no pudo inicio partida
+				Log.info("No se inicia la partida");
 			}
-		}
-		// lista salas disponibles
-		if (o instanceof RequestListRoom) {
+		}else if (o instanceof RequestListRoom) {
+			// lista salas disponibles
 			RequestListRoom rlr = new RequestListRoom();
 			Log.info("Lista de salas!!");
 			rlr = (RequestListRoom) o;
 			//guarda lista de salas en gamestastes
-			this.gamestates.listReceived = true;
-			this.gamestates.setListRoom(rlr.list);
-		}
-		// peticion de informacion usuario, para actualizar room
-		if (o instanceof RequestRoomUpdate) {
+			this.gameStates.listReceived = true;
+			this.gameStates.setListRoom(rlr.list);
+		}else if (o instanceof RequestRoomUpdate) {
+			// peticion de informacion usuario, para actualizar room
 			RequestRoomUpdate rru = (RequestRoomUpdate) o;
 			Log.info("Se recivio update room!!");
-			gamestates.newUpdateRoom = true;
-			gamestates.setRoomUpdate(rru.roomInfo);
-		}
-		//funciona tando al administrador que cierra sala
-		//como jugador que abandona sala
-		if (o instanceof RequestCloseRoom) {
-			gamestates.closeRoom = true;
-			gamestates.roomAcepted = false;
-		}
-		//envia cambio de tiempo para actualizar servidor
-		//y avisa a los demas jugadores
-		if (o instanceof RequestChangeTime) {
+			gameStates.newUpdateRoom = true;
+			gameStates.setRoomUpdate(rru.roomInfo);
+		}else if (o instanceof RequestCloseRoom) {
+			//funciona tando al administrador que cierra sala
+			//como jugador que abandona sala
+			gameStates.closeRoom = true;
+			gameStates.roomAcepted = false;
+		}else if (o instanceof RequestChangeTime) {
+			//envia cambio de tiempo para actualizar servidor
+			//y avisa a los demas jugadores
 			Log.info("realizo cambio de tiempo");
 			RequestChangeTime rct = (RequestChangeTime) o;
 			Log.info("nuevo tiempo es "+ rct.timeMatch);
-			gamestates.timeMatch = Integer.parseInt(rct.timeMatch);
-			gamestates.timeChange = true;
+			gameStates.timeMatch = Integer.parseInt(rct.timeMatch);
+			gameStates.timeChange = true;
+		}else if( o instanceof RequestNewCoord){
+			// se actualiza la posicion de los jugadores
+			RequestNewCoord rnc = (RequestNewCoord ) o;
+			try {
+				this.gameStates.getPositions().put( rnc.username, 
+						new Double[] {
+					(Double) rnc.newCoordInfo.get("x"),
+					(Double) rnc.newCoordInfo.get("y")
+						} );
+				Log.debug("Nueva posicion: " + rnc.username + " (" 
+				+ rnc.newCoordInfo.get("x") + ", " + rnc.newCoordInfo.get("y") + " )");
+				this.gameStates.newPosition = true;
+			} catch (JSONException e) {
+				Log.debug(e.toString());
+			}
 		}
 	}
 }

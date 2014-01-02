@@ -9,7 +9,6 @@ import java.util.List;
 
 import android.graphics.Color;
 import android.util.Log;
-
 import cl.geoconflict.Assets;
 import cl.geoconflict.GameStates;
 import cl.geoconflict.Settings;
@@ -40,33 +39,30 @@ public class LoginScreen extends Screen {
 	
 	/*clase que guarda variables intermediarias entre
 	las screen y el networklistener*/ 
-	GameStates gamestates;
+	GameStates gameStates;
 	
 	public LoginScreen(Game game) {
 		super(game);
 		
 		int width = this.game.getGraphics().getWidth();
-		userBox = new TextBox(this.game, 15, 50, width-30, 40);
-		passBox = new PasswordBox(this.game, 15, 165, width-30, 40);
+		this.userBox = new TextBox(this.game, 15, 50, width-30, 40);
+		this.passBox = new PasswordBox(this.game, 15, 165, width-30, 40);
 		
 		//crea cliente y hace coneccion
-		client = new Client();
-		gamestates = new GameStates();
-		//crea gps - gps se activa con el framework-input
-		//gamestates.gps = new PositionGPS(game);
+		this.client = new Client();
+		this.gameStates = new GameStates();
     	
 		Network.register(client);
 		this.nl = new NetworkListener();
-		this.nl.init(gamestates,client);//parametro juego
-		client.addListener(nl);
-		client.start();
+		this.nl.init(gameStates,client);//parametro juego
+		this.client.addListener(nl);
+		this.client.start();
 		try {
-			client.connect(30000,"**.**.**.**",Network.portTCP, Network.portUDP);
-			//*cambiar timeout a 5000
+			client.connect(30000, Network.SERVER_IP, Network.PORT_TCP, Network.PORT_UDP);
+			// TODO cambiar timeout a 5000
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		 
 	}
 
 	@Override
@@ -85,43 +81,39 @@ public class LoginScreen extends Screen {
                 	this.game.setScreen( new MainMenuScreen(this.game) );
                 }else if (inBounds(e, width-Assets.login.getWidth()-10, height-Assets.login.getHeight()-30,
                 		Assets.login.getWidth(), Assets.login.getHeight())){
-                	
                 	//se apreta boton login
                 	if( this.userBox.getText() != null
                 			&& this.userBox.getText().replaceAll(" ", "").length() != 0
                 			&& this.passBox.getText() != null
                 			&& this.passBox.getText().replaceAll(" ", "").length() != 0 ){
                 		
-                		if( this.client.isConnected()){
+                		if( this.client.isConnected() ){
                     		Log.d("depuracion", "login");
-                    		gamestates.username = this.userBox.getText();
-                    		gamestates.passwd = this.passBox.getText(); 
+                    		this.gameStates.username = this.userBox.getText();
+                    		this.gameStates.passwd = this.passBox.getText(); 
                     		
+                    		// se realiza request de login
                     		RequestLogin rl =  new RequestLogin();
-                    		rl.loginInfo = gamestates.getJSONLogin(game.getFileIO());
+                    		rl.loginInfo = this.gameStates.getJSONLogin(game.getFileIO());
                     		
-                    		gamestates.username = this.userBox.getText();
-                    		client.sendTCP(rl);
+                    		this.gameStates.username = this.userBox.getText();
+                    		this.client.sendTCP(rl);
                     	}
                 	}
                 }
             }
 		}
 		
-		
-		/*debido a que el servidor puede demorar en responder la confirmacion
-		*va fuera del bloque del touchevent
+		/* debido a que el servidor puede demorar en responder la confirmacion
+		* va fuera del bloque del touchevent si se logueo sigue con la siguiente ventana
 		*/
-		//si se logueo sigue con la siguiente ventana
-    	if(this.gamestates.logged){
-    		this.game.setScreen( new ConnectionScreen(this.game, this.client,this.gamestates) );
-    	}
-    	//si el servidor manda mensaje de error se desconecta
-    	if(this.gamestates.error){
+    	if(this.gameStates.logged){
+    		this.game.setScreen( new ConnectionScreen(this.game, this.client, this.gameStates) );
+    	}else if(this.gameStates.error){
+    		//si el servidor manda mensaje de error se desconecta
     		if( this.client.isConnected() )
     			this.client.close();
     	}
-		
 		
 		//actualiza GUI
 		this.userBox.update( keyList );

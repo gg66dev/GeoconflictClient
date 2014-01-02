@@ -23,13 +23,13 @@ public class ArmaScreen extends Screen {
 	Animation arma;
 	Clock clockMatch;
 	Player player;
-	GameStates gamestates;
+	GameStates gameStates;
 	Client client;
 	
-	public ArmaScreen(Game game, Client client, GameStates gamestates) {
+	public ArmaScreen(Game game, Client client, GameStates gameStates) {
 		super(game);
 		this.client = client;
-		this.gamestates = gamestates;
+		this.gameStates = gameStates;
 		Assets.animationArma.scale(4900,450);
 		arma = new Animation(Assets.animationArma,175,450,27);
 				
@@ -38,44 +38,24 @@ public class ArmaScreen extends Screen {
 		Assets.radarSimple.scale(70,70);
 	}
 	
-	public void setMapaScreen(MapaScreen mapascreen, Clock clock, Player player)
-	{
+	public void setMapaScreen(MapaScreen mapascreen, Clock clock, Player player) {
 		this.mapa = mapascreen; 
 		this.clockMatch = clock;
 		this.player = player;
 	}
-	
-	
 
 	@Override
 	public void update(float deltaTime) {
-		// TODO Auto-generated method stub
 		List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
 		
 		//disminuye tiempo
-		clockMatch.update(deltaTime);
+		this.clockMatch.update(deltaTime);
 		
-		//actualiza gps y orientacion
-		//gamestates.gps.onLocationChanged();
-		gamestates.direccion = game.getInput().getDirection();
-		//actualiza player
-		//player.update();
+		//actualiza orientacion
+		this.player.getDirection();
 		
-		
-		//cuando se actualiza GPS se envia log y lat al servidor
-		if(game.getInput().isLocationChanged()){
-			gamestates.latitud = game.getInput().getLatitud();
-			gamestates.longitud = game.getInput().getLongitud(); 
-			
-			RequestNewCoord rnc = new RequestNewCoord();
-			rnc.nameRoom = gamestates.currMatch;
-			rnc.newCoordInfo = gamestates.getCurrCoords();
-			client.sendUDP(rnc);
-			
-			game.getInput().notLocationChanged();
-		}
-		
-		
+		//cuando se actualiza GPS se envia long y lat al servidor
+		this.player.updatePosition();
 		
 		int len = touchEvents.size();
         for(int i = 0; i < len; i++) {
@@ -84,16 +64,17 @@ public class ArmaScreen extends Screen {
             
             	if(inBounds(event, 190, 290 , 90, 200) && arma.isStop()) {
             		            		
-            		if(player.isLoaded())
+            		if(player.isLoaded()) {
             			arma.shoot();
             			player.addScore(10);
             			player.restAmmo();
             			
             			//envio de posicion y orientacion al servidor
             			RequestShoot rs = new RequestShoot();
-            			rs.nameRoom = gamestates.currMatch;
-            			rs.shootInfo = gamestates.getShootInfo();
+            			rs.nameRoom = this.gameStates.currMatch;
+            			rs.shootInfo = this.player.getShootInfo();
             			client.sendUDP(rs);
+            		}
             	}
             	if(inBounds(event, 0, 400 , 70, 70)) {
             		game.setScreen(mapa);
@@ -107,7 +88,6 @@ public class ArmaScreen extends Screen {
 
 	@Override
 	public void present(float deltaTime) {
-		// TODO Auto-generated method stub
 		Graphics g = game.getGraphics();
         
         //fondo negro 
@@ -116,13 +96,9 @@ public class ArmaScreen extends Screen {
 		//arma
 		arma.draw(g);
 		
-		
 		//puntaje
 		g.drawText("puntaje", 180, 30, Color.WHITE, 20);
 		g.drawText(player.getScore(), 190, 60, Color.WHITE, 40);
-		
-		
-		//if bonus
 		
 		//vida
 		g.drawText("vida", 190, 120, Color.WHITE, 20);
@@ -133,13 +109,10 @@ public class ArmaScreen extends Screen {
 		g.drawText("tiempo", 200, 210, Color.WHITE, 20);
 		g.drawText(clockMatch.getTime(), 200, 250, Color.WHITE, 40);
 		
-		
-		
 		//municion
 		g.drawPixmap(Assets.ammo, 190, 290);
 		g.drawText(player.getAmmo(), 210, 340, Color.WHITE, 50);
 		
-                
         //radar simple
         g.drawPixmap(Assets.radarSimple, 0, 400);
 		

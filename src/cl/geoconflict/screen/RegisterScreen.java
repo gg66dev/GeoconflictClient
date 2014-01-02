@@ -60,7 +60,7 @@ public class RegisterScreen extends Screen {
 		client.start();
 		try {
 			//*cambiar timeout a 5000
-			client.connect(30000, "**.**.**.**",Network.portTCP,Network.portUDP);
+			client.connect(30000, Network.SERVER_IP, Network.PORT_TCP, Network.PORT_UDP);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -6,7 +6,6 @@ import android.graphics.Color;
 import cl.geoconflict.Assets;
 import cl.geoconflict.GameStates;
 import cl.geoconflict.gameplay.Clock;
-import cl.geoconflict.gameplay.Map;
 import cl.geoconflict.gameplay.Player;
 
 import cl.geoconflict.network.Network.RequestLeaveRoom;
@@ -82,13 +81,9 @@ public class UnirsePartidaScreen extends Screen {
 		
 		// se inicia la partida
 		if (gamestates.initMatch) {
-			// se crea mapa se asocia a Player y a gps
-			Map map = new Map();
 			//gamestates.gps.addObserver(map);
 			Clock clockMatch = new Clock(15); // p: tiempo partida
-			Player player = new Player(20, map); // p:
-																	// ammo,mapa,
-																	// gps
+			Player player = new Player(20, this.game, this.client, this.gamestates); // p:
 			ArmaScreen arma = new ArmaScreen(game, client, gamestates);
 			MapaScreen mapa = new MapaScreen(game, client, gamestates);
 			arma.setMapaScreen(mapa, clockMatch, player);
@@ -118,7 +113,7 @@ public class UnirsePartidaScreen extends Screen {
 			g.drawText(gamestates.username, 50, 130, Color.WHITE, 30);
 			// muestra miembros del equipo
 			int j = 0;
-			for (int i = 0; i < gamestates.teamRed.size(); i++) { // tamaño de
+			for (int i = 0; i < gamestates.teamRed.size(); i++) { // tamaï¿½o de
 																	// equipo
 				// ignora su hombre
 				if (!gamestates.username.equals(gamestates.teamRed.get(i))) {
@@ -135,7 +130,7 @@ public class UnirsePartidaScreen extends Screen {
 			g.drawText(gamestates.username, 50, 130, Color.WHITE, 30);
 			int j = 0;
 			// muestra miembros del equipo
-			for (int i = 0; i < gamestates.teamBlack.size(); i++) { // tamaño de
+			for (int i = 0; i < gamestates.teamBlack.size(); i++) { // tamaï¿½o de
 																	// equipo
 				if (!gamestates.username.equals(gamestates.teamBlack.get(i))) {
 					g.drawPixmap(Assets.smallLayerBlack, 130, 180 + j * 50);

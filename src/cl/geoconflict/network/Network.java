@@ -1,13 +1,15 @@
 package cl.geoconflict.network;
 
+import org.apache.sling.commons.json.JSONArray;
 import org.apache.sling.commons.json.JSONObject;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
 
 public class Network {
-	public static int portTCP = 54666;
-	public static int portUDP = 54888;
+	public static String SERVER_IP = "186.37.104.48";
+	public static int PORT_TCP = 54666;
+	public static int PORT_UDP = 54888;
 	
     // This registers objects that are going to be sent over the network.
 	public static void register(EndPoint endPoint) {
@@ -60,6 +62,8 @@ public class Network {
     	public String msg;
     	//id para no crear una respuesta por cada request
     	public answer_id id;
+    	public String numPlayers;
+    	public JSONArray positions;
     	public enum answer_id {
     	      LOGIN,REGISTER,CREATEROOM,CLOSEROOM,JOINROOM,MATCHINIT
     	}
@@ -129,7 +133,7 @@ public class Network {
      //actualiza servidor con nueva coordanada cada vez que llega
      public static class RequestNewCoord{
     	 public JSONObject newCoordInfo;
-    	 public String nameRoom;
+    	 public String username;
      }
      //actualiza informacion de la sala cuando se esta gestionano la partida
      public static class RequestRoomUpdate{

@@ -2,6 +2,7 @@ package cl.geoconflict;
 
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 import org.apache.shiro.codec.Hex;
 import org.apache.shiro.crypto.hash.Sha1Hash;
@@ -13,7 +14,6 @@ import org.apache.sling.commons.json.JSONObject;
 import com.badlogic.androidgames.framework.FileIO;
 
 import android.util.Log;
-
 import cl.geoconflict.utils.HashUtil;
 
 /*
@@ -35,6 +35,7 @@ public class GameStates {
 	public boolean closeRoom = false;
 	public boolean initMatch = false;
 	public boolean hasTeam = false;
+	public boolean newPosition = false;
 	
 	public boolean loading;
 	
@@ -46,18 +47,20 @@ public class GameStates {
 	public ArrayList<String> array = new ArrayList<String>(); //listas de salas disponibles
 	public ArrayList<String> teamRed = new ArrayList<String>();
 	public ArrayList<String> teamBlack = new ArrayList<String>();
+	public Hashtable<String, Double[]> positions = new Hashtable<String, Double[]>();
 	public String team;
 	public String currMatch;
 	
 	//crear partida
 	public int timeMatch;
 	
-	//GPS y orientacion
-	//public PositionGPS gps;
-	public float direccion;
-	public double latitud;
-	public double longitud;
-	
+	/**
+	 * @return the positions
+	 */
+	public Hashtable<String, Double[]> getPositions() {
+		return positions;
+	}
+
 	//retorna objeto Json que se enviara al servidor para login
 	public JSONObject getJSONLogin(FileIO files){
 		JSONObject obj = new JSONObject();
@@ -118,8 +121,6 @@ public class GameStates {
 			e.printStackTrace();
 		}
 	}
-
-	
 
 	//info que envia el tiempo y los miembros de ambos equipos
 	public JSONObject getRoomInfo() {
@@ -187,33 +188,24 @@ public class GameStates {
 		
 	}
 
-	public JSONObject getCurrCoords() {
-		JSONObject obj = new JSONObject();
-		//Double longitud = gps.getLatitud();
-		//Double latitud = gps.getLongitud();
-		try {
-			obj.put("latitud",latitud);
-			obj.put("longitud",longitud);
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	/**
+	 * Realiza la inicializaci&oacute;n de la partida
+	 * @param numPlayers Cantidad de players del equipo de este cliente
+	 * @param positions posiciones de los compa&ntilde;eros de equipo
+	 */
+	public void initMatch(int numPlayers, JSONArray positions ){
+		this.initMatch = true;
+		// positions es un JSONArray de JSONObjects con llaves "x" e "y"
+		// con la posicion de los jugadores
+		this.positions = new Hashtable<String, Double[]>();
+		for(int i=0; i<positions.length(); i++ ){
+			try {
+				JSONObject o = (JSONObject) positions.get(i);
+				this.positions.put( o.get("nombre").toString(), 
+						new Double[] {(Double) o.get("x"), (Double) o.get("y")} );
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
 		}
-		return obj;
 	}
-
-	public JSONObject getShootInfo() {
-		JSONObject obj = new JSONObject();
-		//Double longitud = gps.getLatitud();
-		//Double latitud = gps.getLongitud();
-		try {
-			obj.put("latitud",latitud);
-			obj.put("longitud",longitud);
-			obj.put("direccion", (double)direccion); //variable de clase (float)
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return obj;
-	}
-	
 }

@@ -7,7 +7,6 @@ import android.util.Log;
 import cl.geoconflict.Assets;
 import cl.geoconflict.GameStates;
 import cl.geoconflict.gameplay.Clock;
-import cl.geoconflict.gameplay.Map;
 import cl.geoconflict.gameplay.Player;
 import cl.geoconflict.gui.ButtonGUI;
 import cl.geoconflict.gui.ScrollBar;
@@ -26,19 +25,21 @@ public class CrearPartidaScreen extends Screen {
 
 	ScrollBar  scrollbar;
 	Client client;
-	GameStates gamestates;
+	GameStates gameStates;
+	Player player;
 	
 	//tiempo
 	Pixmap tenMin;
 	Pixmap fifteenMin;
 	Pixmap twentyMin;
 	
-	public CrearPartidaScreen(Game game, Client client, GameStates gamestates) {
+	public CrearPartidaScreen(Game game, Client client, GameStates gameStates, Player player) {
 		super(game);
 		this.client = client;
-		this.gamestates = gamestates;
+		this.gameStates = gameStates;
+		this.player = player;
 	
-		scrollbar = new ScrollBar(10, 90, 300, 170);
+		this.scrollbar = new ScrollBar(10, 90, 300, 170);
 		
 		//escala las images
         Assets.tenMinBlack.scale(70, 70);
@@ -49,13 +50,12 @@ public class CrearPartidaScreen extends Screen {
         Assets.twentyMinRed.scale(70, 70);
         Assets.sdUp.scale(70, 70);
         Assets.empezar.scale(170,64);
-        
 		
 		//tiempo 
         tenMin = Assets.tenMinRed;
 		fifteenMin = Assets.fifteenMinBlack;
 		twentyMin = Assets.twentyMinBlack;
-		gamestates.timeMatch = 10;
+		gameStates.timeMatch = 10;
 		
 	}
 
@@ -70,66 +70,61 @@ public class CrearPartidaScreen extends Screen {
 	        //desplaza posicion del scrollbar
 	        if(inBounds(event, 10, 90, 400, 170) ) {
 	            scrollbar.update(deltaTime,event);
-	        }
-			//back
-			if(inBounds(event, 10, 400, Assets.back.getWidth(), Assets.back.getHeight()) ) {
+	        }else if(inBounds(event, 10, 400, Assets.back.getWidth(), Assets.back.getHeight()) ) {
+				//back
 				RequestCloseRoom rcr =  new RequestCloseRoom();
-            	rcr.userNameRoom = this.gamestates.username;
+            	rcr.userNameRoom = this.gameStates.username;
             	this.client.sendTCP(rcr);
             	break;
-            }
-			//empezar partida
-			if(inBounds(event, 150, 400, Assets.empezar.getWidth(), Assets.empezar.getHeight()) ) {
+            }else if(inBounds(event, 150, 400, Assets.empezar.getWidth(), Assets.empezar.getHeight()) ) {
+            	//empezar partida
 				RequestMatchInit rmi = new RequestMatchInit();
 				//no se envian los datos de la partida por que ya estan en el servidor
-				rmi.nameRoom = gamestates.username;
-				rmi.origin = gamestates.getCurrCoords();
-				client.sendTCP(rmi);
-			}
-			//cambio se realiza primero en el servidor
-			//gamestataes cambia cuando recive la confirmacion
-			//10 min
-			if(inBounds(event, 90, 320,Assets.tenMinBlack.getWidth(),Assets.tenMinBlack.getHeight())){
+				rmi.nameRoom = gameStates.username;
+				rmi.origin = this.player.getPosition();
+				this.client.sendTCP(rmi);
+			}else if(inBounds(event, 90, 320,Assets.tenMinBlack.getWidth(),Assets.tenMinBlack.getHeight())){
+				//cambio se realiza primero en el servidor
+				//gamestataes cambia cuando recive la confirmacion
+				//10 min
 				Log.d("debug","se preciono 10");
 				RequestChangeTime rct = new RequestChangeTime();
 				rct.timeMatch =""+ 10;
-				rct.nameRoom = gamestates.username;
-				client.sendTCP(rct);
-			}
-			//15 min
-			if(inBounds(event, 170, 320,Assets.tenMinBlack.getWidth(),Assets.tenMinBlack.getHeight())){
+				rct.nameRoom = gameStates.username;
+				this.client.sendTCP(rct);
+			}else if(inBounds(event, 170, 320,Assets.tenMinBlack.getWidth(),Assets.tenMinBlack.getHeight())){
+				//15 min
 				Log.d("debug","se preciono 15");
 				RequestChangeTime rct = new RequestChangeTime();
 				rct.timeMatch =""+ 15;
-				rct.nameRoom = gamestates.username;
-				client.sendTCP(rct);
-			}
-			//20 min
-			if(inBounds(event, 250, 320,Assets.tenMinBlack.getWidth(),Assets.tenMinBlack.getHeight())){
+				rct.nameRoom = gameStates.username;
+				this.client.sendTCP(rct);
+			}else if(inBounds(event, 250, 320,Assets.tenMinBlack.getWidth(),Assets.tenMinBlack.getHeight())){
+				//20 min
 				Log.d("debug","se preciono 20");
 				RequestChangeTime rct = new RequestChangeTime();
 				rct.timeMatch =""+ 20;
-				rct.nameRoom = gamestates.username;
-				client.sendTCP(rct);
+				rct.nameRoom = this.gameStates.username;
+				this.client.sendTCP(rct);
 			}
 		}
 	    
 	    //nuevo player ingreso
 		//actualiza lista de player
-		if(gamestates.newUpdateRoom){
-			scrollbar.clear();
+		if( this.gameStates.newUpdateRoom ){
+			this.scrollbar.clear();
 			int i = 0;
-			if(gamestates.teamRed.size() > 0){
-				for( String p : gamestates.teamRed ){
-					scrollbar.add(new ButtonGUI(Assets.mediumLayerRed,255,50));
-					scrollbar.GetElement(i).setName(p);
+			if( this.gameStates.teamRed.size() > 0 ){
+				for( String p : this.gameStates.teamRed ){
+					this.scrollbar.add(new ButtonGUI( Assets.mediumLayerRed, 255, 50 ));
+					this.scrollbar.GetElement(i).setName(p);
 					Log.d("debug","agregado "+p);
 					i++;
 				}
 			}
-			if(gamestates.teamBlack.size() > 0){
-				for( String p : gamestates.teamBlack ){
-					scrollbar.add(new ButtonGUI(Assets.mediumLayerBlack,255,50));
+			if( this.gameStates.teamBlack.size() > 0 ){
+				for( String p : this.gameStates.teamBlack ){
+					scrollbar.add( new ButtonGUI( Assets.mediumLayerBlack, 255, 50 ) );
 					scrollbar.GetElement(i).setName(p);
 					Log.d("debug","agregado "+p);
 					i++;
@@ -137,49 +132,41 @@ public class CrearPartidaScreen extends Screen {
 			}
 			
 			//deja de ser una nueva lista
-			gamestates.newUpdateRoom = false;
+			this.gameStates.newUpdateRoom = false;
 		}
 		
 		//cambio de tiempo
-		if(gamestates.timeChange){
-			if(gamestates.timeMatch == 10){
-				tenMin = Assets.tenMinRed;
-				fifteenMin = Assets.fifteenMinBlack;
-				twentyMin = Assets.twentyMinBlack;
+		if( this.gameStates.timeChange){
+			if( this.gameStates.timeMatch == 10){
+				this.tenMin = Assets.tenMinRed;
+				this.fifteenMin = Assets.fifteenMinBlack;
+				this.twentyMin = Assets.twentyMinBlack;
+			}else if(gameStates.timeMatch == 15){
+				this.tenMin = Assets.tenMinBlack;
+				this.fifteenMin = Assets.fifteenMinRed;
+				this.twentyMin = Assets.twentyMinBlack;
+			}else if(gameStates.timeMatch == 20){
+				this.tenMin = Assets.tenMinBlack;
+				this.fifteenMin = Assets.fifteenMinBlack;
+				this.twentyMin = Assets.twentyMinRed;
 			}
-			if(gamestates.timeMatch == 15){
-				tenMin = Assets.tenMinBlack;
-				fifteenMin = Assets.fifteenMinRed;
-				twentyMin = Assets.twentyMinBlack;
-			}
-			if(gamestates.timeMatch == 20){
-				tenMin = Assets.tenMinBlack;
-				fifteenMin = Assets.fifteenMinBlack;
-				twentyMin = Assets.twentyMinRed;
-			}
-			gamestates.timeChange = false;
+			this.gameStates.timeChange = false;
 		}
 			
-		
-		
 		//se inicia la partida
-		if(gamestates.initMatch){
-			//se crea mapa se asocia a Player y a gps
-			Map map = new Map();
-			//gamestates.gps.addObserver(map);
+		if( this.gameStates.initMatch ){
 			Clock clockMatch = new Clock(15); //p: tiempo partida
-			Player player = new Player(20,map); //p: ammo,mapa, gps
-    		ArmaScreen arma = new ArmaScreen(game,client,gamestates);
-    		MapaScreen mapa = new MapaScreen(game,client,gamestates);
-    		arma.setMapaScreen(mapa,clockMatch,player);
-    		mapa.setArmaScreen(arma,clockMatch,player);
+    		ArmaScreen arma = new ArmaScreen( this.game, this.client, this.gameStates);
+    		MapaScreen mapa = new MapaScreen( this.game, this.client, this.gameStates);
+    		arma.setMapaScreen( mapa, clockMatch, this.player);
+    		mapa.setArmaScreen( arma, clockMatch, this.player);
     		this.game.setScreen(mapa);
 		}
 		// cierre de partida, salen a mainMenu
-		if (gamestates.closeRoom) {
-			this.gamestates.roomAcepted = false;
-			this.gamestates.closeRoom = false;
-			this.game.setScreen(new MenuScreen(this.game, this.client,this.gamestates));
+		if ( this.gameStates.closeRoom ) {
+			this.gameStates.roomAcepted = false;
+			this.gameStates.closeRoom = false;
+			this.game.setScreen(new MenuScreen(this.game, this.client,this.gameStates));
 		}
 	}
 
@@ -200,7 +187,6 @@ public class CrearPartidaScreen extends Screen {
         g.drawPixmap(Assets.back,10, 400);
         
         g.drawText("Crear Partida", 10, 50, Color.BLACK, 50);
-		
 	}
 
 	@Override

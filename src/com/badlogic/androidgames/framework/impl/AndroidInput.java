@@ -105,8 +105,8 @@ public class AndroidInput implements Input {
 	}
 	
     @Override
-    public void notLocationChanged(){
-		locationHandler.notLocationChanged();
+    public void setLocationChanged(boolean value){
+		locationHandler.setLocationChanged(value);
 	}
     
 	@Override

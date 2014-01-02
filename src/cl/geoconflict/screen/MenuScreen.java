@@ -7,10 +7,10 @@ import java.util.List;
 
 import org.apache.sling.commons.json.JSONObject;
 
-
 import cl.geoconflict.Assets;
 import cl.geoconflict.GameStates;
 import cl.geoconflict.Settings;
+import cl.geoconflict.gameplay.Player;
 import cl.geoconflict.network.Network.RequestCreateRoom;
 import cl.geoconflict.network.Network.RequestListRoom;
 
@@ -25,10 +25,8 @@ import com.esotericsoftware.kryonet.Client;
  *
  */
 public class MenuScreen extends Screen{
-
 	Client client;
 	GameStates gameStates;
-
 	
 	public MenuScreen(Game game, Client client, GameStates gameStates) {
 		super(game);
@@ -74,9 +72,9 @@ public class MenuScreen extends Screen{
         
         if(this.gameStates.roomAcepted){
         	this.gameStates.currMatch = this.gameStates.username;
-        	this.game.setScreen(new CrearPartidaScreen(this.game, this.client, this.gameStates));
-        }
-        if(this.gameStates.listReceived){
+        	Player player = new Player(20, this.game, this.client, this.gameStates);
+        	this.game.setScreen(new CrearPartidaScreen(this.game, this.client, this.gameStates, player));
+        }else if(this.gameStates.listReceived){
         	this.game.setScreen(new PartidasDisponiblesScreen(this.game, this.client, this.gameStates));
         }
 	}

@@ -6,36 +6,35 @@ import com.badlogic.androidgames.framework.Graphics;
 import com.badlogic.androidgames.framework.Pixmap;
 
 public class PlayerPoint {
-
-	Pixmap pixmap;
-	int width;
-	int height;
-	float speed;
-	int x, y;
-	int numRows;
-	int numCols;
-	float lapse = 0;
-	int row, col; //funcionan de index frame
+	private Pixmap pixmap;
+	private String id;
+	private int width;
+	private int height;
+	private int x, y;
+	private int numRows;
+	private int numCols;
+	private float lapse = 0;
+	private int row, col; //funcionan de index frame
 	public float rotate = 0.0f;
 	
-	
-	public PlayerPoint(Pixmap pixmap, int widthFrame, int heightFrame, int numRows, int numCols){
+	public PlayerPoint(Pixmap pixmap, String id, int widthFrame, int heightFrame, int numRows, int numCols){
 		this.pixmap = pixmap;
+		this.id = id;
 		this.width = widthFrame;
 		this.height = heightFrame;
-		x = 10;
-		y = 10;
+		this.x = 10;
+		this.y = 10;
 		this.numRows = numRows;
 		this.numCols = numCols;
-		row = 0;
-		col = 0;
+		this.row = 0;
+		this.col = 0;
 	}
 	
 	/**
 	 * pensado solo para mostrar la orientacion en el mapa.
 	 * como la pantalla en modo mapa se pone en horizontal, para
 	 * que el norte quede apuntando hacia las estadisticas de la 
-	 * pantalla (hacia arriba) se hace un ajuste de 180°
+	 * pantalla (hacia arriba) se hace un ajuste de 180
 	 * **/
 	public void setRotation(float rotation){
 		if(  rotation + 180   > 360 )
@@ -44,17 +43,19 @@ public class PlayerPoint {
 			this.rotate = rotation + 180;
 	}
 	
-	
-	public void setPosition(int x, int y)
-	{
+	public void setPosition(int x, int y){
 		this.x = x;
 		this.y = y;
 	}
 	
-	
+	/**
+	 * @return the id
+	 */
+	public String getId() {
+		return id;
+	}
+
 	public void update(float dt){
-		
-		
 		if(lapse > 0.09f ){
 			col++;
 			lapse = 0;
@@ -68,9 +69,7 @@ public class PlayerPoint {
 		lapse += dt;
 	}
 	
-	
 	public void draw(Graphics g){
-		
 		g.drawPixmap(pixmap, x, y, width*col ,height*row , width , height );
 		//orientacion es mostrada como una fecha roja
 		g.drawPixmap(Assets.redArrow, x, y, rotate );

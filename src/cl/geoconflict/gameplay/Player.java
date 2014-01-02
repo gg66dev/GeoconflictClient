@@ -1,60 +1,53 @@
 package cl.geoconflict.gameplay;
 
-import cl.geoconflict.gps.PositionGPS;
+import org.apache.sling.commons.json.JSONException;
+import org.apache.sling.commons.json.JSONObject;
+
+import cl.geoconflict.GameStates;
+import cl.geoconflict.network.Network.RequestNewCoord;
+
+import com.badlogic.androidgames.framework.Game;
+import com.esotericsoftware.kryonet.Client;
 
 public class Player {
 	
 	/** Le otorga mayor sensibilidad al GPS, haciendo que el movimiento se vea m&aacute;s r&aacute;pido */
 	public static final int SPEED = 3;
 	
-	
 	private int iAmmo;
 	private int iScore;
-	private Map map;
 	private int health;
-	private PositionGPS gps;
 	private int x;
 	private int y;
-	private int width;
-	private int height;
-	private int screenWidth;
-	private int screenHeight;
+	private Game game;
+	private Double latitud;
+	private Double longitud;
+	private Client client;
+	private GameStates gameStates;
 	
-	
-	//public Player(int ammo, Map map, PositionGPS gps){
-	public Player(int ammo, Map map){
-		health = 10;
-		iAmmo = ammo;
-		iScore = 0;
-		this.map = map;
-		this.gps = gps;
+	public Player(int ammo, Game game, Client client, GameStates gameStates){
+		this.health = 10;
+		this.iAmmo = ammo;
+		this.iScore = 0;
+		this.game = game;
+		this.client = client;
+		this.gameStates = gameStates;
+		this.latitud = 0d;
+		this.longitud = 0d;
 		//posicion se corrige cuando se asigna dimencion
 		this.x=0;
 		this.y=0;
 	}
 	
-	public void setDimencion(int w, int h, int sw, int sh){
-		
-		this.width = w;
-		this.height = h;
-		this.screenWidth = sw;
-		this.screenHeight = sh;
-		this.x = sw/2 - this.width/2;
-		this.y = sh/2 - this.height/2;
-	}
-	
-	
-	public boolean isLoaded()
-	{
-		if(iAmmo > 0) 
+	public boolean isLoaded() {
+		if(this.iAmmo > 0) 
 			return true;
-		
-		return(false);
+		return false;
 	}
 	
 	public void addScore(int score){
 		if(iAmmo > 0)
-			iScore+=score;
+			iScore += score;
 	}
 	
 	public void restAmmo(){
@@ -62,9 +55,7 @@ public class Player {
 			iAmmo--;
 	}
 	
-	
-	public String getScore(){
-		
+	public String getScore() {
 		if(iScore < 10)
 			return "00000";
 		if(iScore < 100)
@@ -73,9 +64,7 @@ public class Player {
 			return "00"+  Integer.toString(iScore);
 		if(iScore < 10000)
 			return "0"+  Integer.toString(iScore);
-				
 		return Integer.toString(iScore);
-			
 	}
 	
 	public String getAmmo(){
@@ -88,6 +77,10 @@ public class Player {
 	
 	public int getY(){
 		return y;
+	}
+	
+	public Game getGame(){
+		return this.game;
 	}
 	
 	/**
@@ -103,14 +96,64 @@ public class Player {
 	public void setHealth(int health) {
 		this.health = health;
 	}
+
+	/**
+	 * @return the latitud
+	 */
+	public Double getLatitud() {
+		this.latitud = this.game.getInput().getLatitud();
+		return latitud;
+	}
+
+	/**
+	 * @return the longitud
+	 */
+	public Double getLongitud() {
+		this.longitud = this.game.getInput().getLongitud();
+		return longitud;
+	}
 	
-	/** Actualiza el movimiento del jugador en el juego */
-//	public void update(){
-//		if( this.gps.getX() != 0 || this.gps.getY() != 0){
-//			this.x = (int) (this.screenWidth/2 - this.width/2 +
-//					( ( (int) this.gps.getX() ) - this.map.getInitialX()) * SPEED );
-//			this.y = (int) (this.screenHeight/2 - this.height/2 + 
-//					( ( (int) this.gps.getY() ) - this.map.getInitialY()) * SPEED );
-//		}
-//	}
+	/**
+	 * @return the direction
+	 */
+	public float getDirection() {
+		return this.game.getInput().getDirection();
+	}
+
+	public void updatePosition(){
+		if(this.game.getInput().isLocationChanged()){
+			this.latitud = this.game.getInput().getLatitud();
+			this.longitud = this.game.getInput().getLongitud(); 
+			
+			RequestNewCoord rnc = new RequestNewCoord();
+			rnc.username = this.gameStates.currMatch;
+			rnc.newCoordInfo = this.getPosition();
+			this.client.sendUDP(rnc);
+			
+			this.game.getInput().setLocationChanged(false);
+		}
+	}
+	
+	public JSONObject getPosition() {
+		JSONObject obj = new JSONObject();
+		try {
+			obj.put("latitud", this.latitud);
+			obj.put("longitud", this.longitud);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return obj;
+	}
+	
+	public JSONObject getShootInfo() {
+		JSONObject obj = new JSONObject();
+		try {
+			obj.put("latitud", this.latitud);
+			obj.put("longitud", this.longitud);
+			obj.put("direccion", (double) this.getDirection() ); //variable de clase (float)
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return obj;
+	}
 }

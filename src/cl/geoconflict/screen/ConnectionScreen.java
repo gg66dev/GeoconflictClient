@@ -20,26 +20,21 @@ import com.esotericsoftware.kryonet.Client;
  */
 public class ConnectionScreen extends Screen {
 	private Client client;
-	private GameStates gamestates;
+	private GameStates gameStates;
 
-
-	public ConnectionScreen(Game game, Client client, GameStates gamestates) {
+	public ConnectionScreen(Game game, Client client, GameStates gameStates) {
         super(game);
         this.client = client;
-        this.gamestates = gamestates;
+        this.gameStates = gameStates;
     }
 
     @Override
     public void update(float deltaTime) {
     	Graphics g = game.getGraphics();
-//    	Assets.background.dispose();
-//        Assets.design.dispose();
         Assets.start.dispose();
-//        Assets.sound.dispose();
         Assets.login.dispose();
         Assets.help.dispose();
         Assets.ranking.dispose();
-//        Assets.back.dispose();
         Assets.register.dispose();
         
         //crear partida - buscar partida - unirse partida
@@ -75,7 +70,7 @@ public class ConnectionScreen extends Screen {
         Assets.redArrow = g.newPixmap("arma-mapa/redArrow.png", PixmapFormat.ARGB4444);
         
         Settings.load(game.getFileIO());
-        game.setScreen(new MenuScreen(this.game, this.client, this.gamestates));
+        game.setScreen(new MenuScreen(this.game, this.client, this.gameStates));
     }
 
     @Override
