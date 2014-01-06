@@ -7,7 +7,6 @@ import cl.geoconflict.GameStates;
 import cl.geoconflict.network.Network.RequestNewCoord;
 
 import com.badlogic.androidgames.framework.Game;
-import com.esotericsoftware.kryonet.Client;
 
 public class Player {
 	
@@ -22,16 +21,12 @@ public class Player {
 	private Game game;
 	private Double latitud;
 	private Double longitud;
-	private Client client;
-	private GameStates gameStates;
 	
-	public Player(int ammo, Game game, Client client, GameStates gameStates){
+	public Player(int ammo, Game game){
 		this.health = 10;
 		this.iAmmo = ammo;
 		this.iScore = 0;
 		this.game = game;
-		this.client = client;
-		this.gameStates = gameStates;
 		this.latitud = 0d;
 		this.longitud = 0d;
 		//posicion se corrige cuando se asigna dimencion
@@ -126,9 +121,9 @@ public class Player {
 			this.longitud = this.game.getInput().getLongitud(); 
 			
 			RequestNewCoord rnc = new RequestNewCoord();
-			rnc.username = this.gameStates.currMatch;
+			rnc.username = GameStates.currMatch;
 			rnc.newCoordInfo = this.getPosition();
-			this.client.sendUDP(rnc);
+			GameStates.client.sendUDP(rnc);
 			
 			this.game.getInput().setLocationChanged(false);
 		}

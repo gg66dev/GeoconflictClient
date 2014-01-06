@@ -23,10 +23,10 @@ public class LocationHandler implements LocationListener {
 		isChanged = false;
 	}
 	
+	
 	public double getLatitud(){
 		return latitud;
 	}
-	
 	public double getLongitud(){
 		return longitud;
 	}
@@ -34,9 +34,8 @@ public class LocationHandler implements LocationListener {
 	public boolean isLocationChanged(){
 		return isChanged;
 	}
-	
 	public void setLocationChanged(boolean value){
-		this.isChanged = value;
+		  this.isChanged = value;
 	}
 	
 	@Override

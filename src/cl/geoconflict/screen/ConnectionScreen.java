@@ -7,56 +7,29 @@ package cl.geoconflict.screen;
 import cl.geoconflict.Assets;
 import cl.geoconflict.GameStates;
 import cl.geoconflict.Settings;
+import cl.geoconflict.gameplay.Clock;
+import cl.geoconflict.gameplay.Player;
 
 import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
 import com.badlogic.androidgames.framework.Screen;
 import com.badlogic.androidgames.framework.Graphics.PixmapFormat;
-import com.esotericsoftware.kryonet.Client;
 
 /**
  * @author Fernando Valencia F.
  *
  */
 public class ConnectionScreen extends Screen {
-	private Client client;
-	private GameStates gameStates;
 
-	public ConnectionScreen(Game game, Client client, GameStates gameStates) {
+
+	public ConnectionScreen(Game game) {
         super(game);
-        this.client = client;
-        this.gameStates = gameStates;
     }
 
     @Override
     public void update(float deltaTime) {
     	Graphics g = game.getGraphics();
-        Assets.start.dispose();
-        Assets.login.dispose();
-        Assets.help.dispose();
-        Assets.ranking.dispose();
-        Assets.register.dispose();
-        
-        //crear partida - buscar partida - unirse partida
-        Assets.create_match = g.newPixmap("create_match.png", PixmapFormat.RGB565);
-        Assets.join_match = g.newPixmap("join_match.png", PixmapFormat.RGB565);
-        Assets.create_map = g.newPixmap("create_map.png", PixmapFormat.RGB565);
-        Assets.tenMinBlack = g.newPixmap("opciones-partida/10min-black.jpg", PixmapFormat.ARGB4444);
-        Assets.tenMinRed = g.newPixmap("opciones-partida/10min-red.jpg", PixmapFormat.ARGB4444);
-        Assets.fifteenMinBlack = g.newPixmap("opciones-partida/15min-black.jpg", PixmapFormat.ARGB4444);
-        Assets.fifteenMinRed = g.newPixmap("opciones-partida/15min-red.jpg", PixmapFormat.ARGB4444);
-        Assets.twentyMinBlack = g.newPixmap("opciones-partida/20min-black.jpg", PixmapFormat.ARGB4444);
-        Assets.twentyMinRed = g.newPixmap("opciones-partida/20min-red.jpg", PixmapFormat.ARGB4444);
-        Assets.hughLayerBlack = g.newPixmap("opciones-partida/hugh-layer-black.png", PixmapFormat.ARGB4444);
-        Assets.hughLayerRed = g.newPixmap("opciones-partida/hugh-layer-red.png", PixmapFormat.ARGB4444);
-        Assets.mediumLayerBlack = g.newPixmap("opciones-partida/medium-layer-black.png", PixmapFormat.ARGB4444);
-        Assets.mediumLayerRed = g.newPixmap("opciones-partida/medium-layer-red.png", PixmapFormat.ARGB4444);
-        Assets.smallLayerBlack = g.newPixmap("opciones-partida/small-layer-black.png", PixmapFormat.ARGB4444);
-        Assets.smallLayerRed = g.newPixmap("opciones-partida/small-layer-red.png", PixmapFormat.ARGB4444);
-        Assets.sdUp = g.newPixmap("opciones-partida/sd-up.jpg", PixmapFormat.ARGB4444);
-        Assets.empezar = g.newPixmap("empezar.png", PixmapFormat.ARGB4444);
-        Assets.slice = g.newPixmap("slice.png", PixmapFormat.ARGB4444);
-        
+       
         //arma-mapa
         Assets.animationArma = g.newPixmap("animations/animacionArma.jpg", PixmapFormat.ARGB4444);
         Assets.lifeplayer = g.newPixmap("arma-mapa/life.png", PixmapFormat.ARGB4444);
@@ -70,7 +43,16 @@ public class ConnectionScreen extends Screen {
         Assets.redArrow = g.newPixmap("arma-mapa/redArrow.png", PixmapFormat.ARGB4444);
         
         Settings.load(game.getFileIO());
-        game.setScreen(new MenuScreen(this.game, this.client, this.gameStates));
+        
+        //logica del juego se puede usar GameStates
+    	//se crea mapa se asocia a Player y a gps
+        Player player = new Player(20, this.game);
+		Clock clockMatch = new Clock(GameStates.timeMatch); //p: tiempo partida
+		ArmaScreen arma = new ArmaScreen(game);
+		MapaScreen mapa = new MapaScreen(game);
+		arma.setMapaScreen(mapa,clockMatch,player);
+		mapa.setArmaScreen(arma,clockMatch,player);
+        game.setScreen(mapa);
     }
 
     @Override

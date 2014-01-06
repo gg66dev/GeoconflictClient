@@ -1,0 +1,113 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:orientation="vertical"
+    tools:context=".CrearPartidaScreen_activity" >
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true" >
+
+        <Button
+            android:id="@+id/empezar"
+            android:layout_width="128dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="28dp"
+            android:adjustViewBounds="true"
+            android:background="@drawable/empezar_custom"
+            android:onClick="onClick_empezar" />
+
+        <Button
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="18dp"
+            android:background="@drawable/back_custom"
+            android:onClick="onClick_back" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout3"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/relativeLayout2"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="37dp" >
+
+        <Button
+            android:id="@+id/fifteenmin"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="16dp"
+            android:layout_toLeftOf="@+id/twentymin"
+            android:background="@drawable/fifteenmin_black"
+            android:onClick="onClick_fifteenmin" />
+
+        <Button
+            android:id="@+id/twentymin"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/twentymin_black"
+            android:onClick="onClick_twentymin" />
+
+        <Button
+            android:id="@+id/tenmin"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="16dp"
+            android:layout_toLeftOf="@+id/fifteenmin"
+            android:background="@drawable/tenmin_red"
+            android:onClick="onClick_tenmin" />
+
+        <Button
+            android:id="@+id/sd_up"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginRight="16dp"
+            android:layout_toLeftOf="@+id/tenmin"
+            android:background="@drawable/sd_up"
+            android:onClick="onClick_sd_up" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="29dp"
+        android:text="@string/tx_crearpartida"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="@dimen/font_size" />
+
+    <ListView
+        android:id="@+id/listuser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/relativeLayout3"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView1" 
+        android:listSelector="@drawable/list_selector"
+        android:choiceMode="singleChoice">
+        
+
+    </ListView>
+
+</RelativeLayout>

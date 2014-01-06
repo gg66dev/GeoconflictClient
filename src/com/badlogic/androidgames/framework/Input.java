@@ -2,6 +2,9 @@ package com.badlogic.androidgames.framework;
 
 import java.util.List;
 
+import android.view.View;
+
+
 public interface Input {
     public static class KeyEvent {
         public static final int KEY_DOWN = 0;
@@ -82,5 +85,7 @@ public interface Input {
 	
 	public float getDirection();
 	
-	public boolean isSensorRunning(); 
+	public boolean isSensorRunning();
+
+	public void setRenderView(View renderView, float scaleX, float scaleY); 
 }

@@ -7,7 +7,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
 
 public class Network {
-	public static String SERVER_IP = "186.37.104.48";
+	public static String SERVER_IP = "**.**.**.**";
 	public static int PORT_TCP = 54666;
 	public static int PORT_UDP = 54888;
 	

@@ -12,7 +12,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
-import cl.geoconflict.R;
+//import cl.geoconflict.R;
+
+import cl.geoconflict.GameProperties;
+import cl.geoconflict.activity.R;
 
 import com.badlogic.androidgames.framework.Audio;
 import com.badlogic.androidgames.framework.FileIO;
@@ -51,14 +54,17 @@ public abstract class AndroidGame extends Activity implements Game {
 
         renderView = new AndroidFastRenderView(this, frameBuffer);
         graphics = new AndroidGraphics(getAssets(), frameBuffer);
-        fileIO = new AndroidFileIO(getAssets());
-        audio = new AndroidAudio(this);
-        input = new AndroidInput(this, renderView, scaleX, scaleY);
+        fileIO = GameProperties.getFileIO();
+        audio = GameProperties.getAudio();
+        input = GameProperties.getInput();
+        input.setRenderView(renderView, scaleX, scaleY);
+        
         screen = getStartScreen();
         setContentView(renderView);
         
         PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "GLGame");
+        
     }
 
     @Override
@@ -116,14 +122,14 @@ public abstract class AndroidGame extends Activity implements Game {
         return screen;
     }
     
-    //para mostrar el menÃº de la aplicaciÃ³n
+  //para mostrar el menú de la aplicación
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
     
-    //cÃ³digo para cada opciÃ³n de menÃº
+    //código para cada opción de menú
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) 
@@ -136,5 +142,4 @@ public abstract class AndroidGame extends Activity implements Game {
                 return super.onOptionsItemSelected(item);
         }
     }
-
 }
