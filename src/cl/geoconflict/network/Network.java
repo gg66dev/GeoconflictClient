@@ -111,6 +111,7 @@ public class Network {
     public static class RequestMatchInit{
     	public String nameRoom;
     	public JSONObject origin;
+    	public JSONObject map;
     }
     /**
      * Request de informaci&oacute;n del match

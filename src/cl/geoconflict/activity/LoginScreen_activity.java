@@ -53,7 +53,7 @@ public class LoginScreen_activity extends Activity {
 
 		AlertDialog.Builder alt_bld = new AlertDialog.Builder(this);
 		if (username.isEmpty() && passwd.isEmpty()) {
-			alt_bld.setMessage("no deben haber campos vacios");
+			alt_bld.setMessage("No deben haber campos vacios");
 			alt_bld.setCancelable(false);
 			alt_bld.setPositiveButton("Ok", null);
 			alt_bld.show();
@@ -62,7 +62,7 @@ public class LoginScreen_activity extends Activity {
 			LoginWaitTask(username, passwd);
 		} else
 		{
-			alt_bld.setMessage("no se tiene conección con el servidor");
+			alt_bld.setMessage("No se tiene coneccion con el servidor");
 			alt_bld.setCancelable(false);
 			alt_bld.setPositiveButton("Ok", null);
 			alt_bld.show();
@@ -137,12 +137,12 @@ public class LoginScreen_activity extends Activity {
 	private void updateUI() {
 		AlertDialog.Builder alt_bld = new AlertDialog.Builder(this);
 		if (!result) {
-			alt_bld.setMessage("No existe usuario o código salt no coincide");
+			alt_bld.setMessage("No existe usuario o codigo salt no coincide");
 			alt_bld.setCancelable(false);
 			alt_bld.setPositiveButton("Ok", null);
 			alt_bld.show();
 		} else {
-			alt_bld.setMessage("autentificacion Exitosa");
+			alt_bld.setMessage("Autentificacion exitosa");
 			alt_bld.setCancelable(false);
 			alt_bld.setPositiveButton("Ok",
 					new DialogInterface.OnClickListener() {

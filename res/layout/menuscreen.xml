@@ -48,31 +48,24 @@
         android:layout_alignParentLeft="true" >
 
         <Button
-            android:id="@+id/join_match"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/create_map"
-            android:layout_centerVertical="true"
-            android:background="@drawable/join_match_custom"
-            android:onClick="onClick_join_match" />
-
-        <Button
-            android:id="@+id/create_map"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/create_map_custom"
-            android:onClick="onClick_create_map" />
-
-        <Button
             android:id="@+id/create_match"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/join_match"
             android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
             android:background="@drawable/create_match_custom"
             android:onClick="onClick_create_match" />
+
+        <Button
+            android:id="@+id/join_match"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/create_match"
+            android:layout_below="@+id/create_match"
+            android:layout_marginTop="54dp"
+            android:background="@drawable/join_match_custom"
+            android:onClick="onClick_join_match" />
+
     </RelativeLayout>
 
 </RelativeLayout>

@@ -67,6 +67,16 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
+            android:name=".GuardarMapaScreen_activity"
+            android:label="@string/app_name"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
+            android:name=".CargarMapaScreen_activity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
             android:name="cl.geoconflict.GeoConflictGame"
             android:label="@string/app_name"
             android:configChanges="keyboard|keyboardHidden|orientation"

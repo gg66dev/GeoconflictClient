@@ -166,6 +166,7 @@ public class ConnectionManager {
 						// no se envian los datos de la partida por que ya estan en el servidor
 						rmi.nameRoom = GameStates.username;
 						rmi.origin = GameProperties.getMatchOrigin();
+						rmi.map = GameStates.getJSONMap();
 						GameStates.client.sendTCP(rmi);
 						matchInit = false;
 					}

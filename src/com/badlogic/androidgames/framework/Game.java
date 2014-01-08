@@ -19,4 +19,5 @@ public interface Game {
     
     public Activity getActivity();
     
+    public void getSaveMapActivity();
 }
