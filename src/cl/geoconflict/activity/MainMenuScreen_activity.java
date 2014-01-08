@@ -1,5 +1,7 @@
 package cl.geoconflict.activity;
 
+import cl.geoconflict.GameStates;
+import cl.geoconflict.GeoConflictGame;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,8 +34,17 @@ public class MainMenuScreen_activity extends Activity {
 		finish();
 	}
 
+	/*
 	public void onClick_back(View v) {
 		Intent i = new Intent(MainMenuScreen_activity.this, StartScreen_activity.class);
+		startActivity(i);
+		finish();
+	}*/
+	
+	public void onClick_create_map(View v){
+		GameStates.createMap = true;
+		Intent i = new Intent(MainMenuScreen_activity.this,
+				GeoConflictGame.class);
 		startActivity(i);
 		finish();
 	}

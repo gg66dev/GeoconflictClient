@@ -16,6 +16,8 @@
     <string name="tx_two"></string>
     <string name="tx_three"></string>
     <string name="tx_four"></string>
-    <string name="logo">logo</string> 
+    <string name="logo">logo</string>
+    <string name="nombremapa">Nombre del Mapa</string>
+    <string name="cargarmapa">Cargar mapa</string> 
 
 </resources>

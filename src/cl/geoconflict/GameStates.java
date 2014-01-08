@@ -14,6 +14,7 @@ import com.badlogic.androidgames.framework.FileIO;
 import com.esotericsoftware.kryonet.Client;
 
 import android.util.Log;
+import cl.geoconflict.gameplay.Collisionable;
 import cl.geoconflict.utils.HashUtil;
 
 /*
@@ -25,7 +26,8 @@ public class GameStates {
 	// cliente
 	static public Client client;
 
-	// se asegura que metodo init de clases estaticas se llamen solo una vez
+	// se asegura que metodo init de las clases estaticas se llamen solo una vez
+	// (en StartScreen_activity)
 	static public boolean staticClassStarted = false;
 
 	// variable que se confirma en la respuesta al servidor
@@ -42,13 +44,17 @@ public class GameStates {
 	static public boolean initMatch = false;
 	static public boolean hasTeam = false;
 	public static boolean newPosition = false;
-
+	public static boolean createMap = false;
+	public static boolean mapLoaded = false;
+	
 	static public boolean loading;
 
 	static public String username;
 	static public String passwd;
 	static public String mail;
-
+	static public String mapFile;
+	
+	
 	// listar sala -unirse
 	static public ArrayList<String> array = new ArrayList<String>(); // listas
 																		// de
@@ -57,10 +63,11 @@ public class GameStates {
 	static public ArrayList<String> teamRed = new ArrayList<String>();
 	static public ArrayList<String> teamBlack = new ArrayList<String>();
 	static public Hashtable<String, Double[]> positions = new Hashtable<String, Double[]>();
+	//lista de colisionables
+	static public ArrayList<Collisionable> collList = new ArrayList<Collisionable>();  
 	static public String team;
 	static public String currMatch;
-	
-	
+
 	// crear partida
 	static public int timeMatch;
 
@@ -204,22 +211,24 @@ public class GameStates {
 		Log.d("debug", "se termino de actualizar lista de equipos");
 	}
 
-	
 	/**
 	 * Realiza la inicializaci&oacute;n de la partida
-	 * @param numPlayers Cantidad de players del equipo de este cliente
-	 * @param positions posiciones de los compa&ntilde;eros de equipo
+	 * 
+	 * @param numPlayers
+	 *            Cantidad de players del equipo de este cliente
+	 * @param positions
+	 *            posiciones de los compa&ntilde;eros de equipo
 	 */
-	static public void initMatch(int numPlayers, JSONArray posJsonArray ){
+	static public void initMatch(int numPlayers, JSONArray posJsonArray) {
 		initMatch = true;
 		// positions es un JSONArray de JSONObjects con llaves "x" e "y"
 		// con la posicion de los jugadores
 		positions = new Hashtable<String, Double[]>();
-		for(int i=0; i<posJsonArray.length(); i++ ){
+		for (int i = 0; i < posJsonArray.length(); i++) {
 			try {
 				JSONObject o = (JSONObject) posJsonArray.get(i);
-				positions.put( o.get("nombre").toString(), 
-						new Double[] {(Double) o.get("x"), (Double) o.get("y")} );
+				positions.put(o.get("nombre").toString(), new Double[] {
+						(Double) o.get("x"), (Double) o.get("y") });
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -232,6 +241,21 @@ public class GameStates {
 		int positionBlack = teamBlack.indexOf(playerB);
 		teamRed.set(positionRed, playerB);
 		teamBlack.set(positionBlack, playerA);
+	}
+
+	public static JSONObject getJSONMap(){
+		JSONObject obj = new JSONObject();
+		JSONArray collJSonArray = new JSONArray();
+		for(int i = 0; i < GameStates.collList.size(); i++){
+			collJSonArray.put(GameStates.collList.get(i).toString());
+		}
+		
+		try {
+			obj.put("collList", collJSonArray);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return obj;
 	}
 
 }

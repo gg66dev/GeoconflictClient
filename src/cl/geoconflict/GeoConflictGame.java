@@ -4,6 +4,8 @@
 package cl.geoconflict;
 
 
+import android.content.Intent;
+import cl.geoconflict.activity.GuardarMapaScreen_activity;
 import cl.geoconflict.screen.ConnectionScreen;
 import com.badlogic.androidgames.framework.Screen;
 import com.badlogic.androidgames.framework.impl.AndroidGame;
@@ -26,6 +28,13 @@ public class GeoConflictGame extends AndroidGame {
 		return new ConnectionScreen(this);
 	}
 
+	public void getSaveMapActivity(){
+		Intent i = new Intent(GeoConflictGame.this,
+				GuardarMapaScreen_activity.class);
+		startActivity(i);
+		finish();
+	}
+	
 	
 	
 	

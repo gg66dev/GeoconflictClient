@@ -22,6 +22,13 @@ public class Assets {
     public static Pixmap playerGreen;
     public static Pixmap simpleAmmo;
     public static Pixmap redArrow;
+	public static Pixmap b_drop;
+	public static Pixmap b_h_add;
+	public static Pixmap b_h_subtract;
+	public static Pixmap b_new_c;
+	public static Pixmap b_save;
+	public static Pixmap b_w_add;
+	public static Pixmap b_w_subtract;
 
 
 }

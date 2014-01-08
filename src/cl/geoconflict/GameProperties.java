@@ -54,7 +54,6 @@ public class GameProperties {
 			e.printStackTrace();
 		}
 		return obj;
-
 	}
 
 }

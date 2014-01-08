@@ -8,6 +8,9 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+
+import cl.geoconflict.gameplay.Collisionable;
 
 import com.badlogic.androidgames.framework.FileIO;
 
@@ -44,6 +47,26 @@ public class Settings {
 					files.writeFile(".geoconflict")));
 			out.write(Boolean.toString(soundEnabled));
 			out.write("\n");
+		} catch (IOException e) {
+		} finally {
+			try {
+				if (out != null)
+					out.close();
+			} catch (IOException e) {
+			}
+		}
+	}
+	
+	
+	public static void saveMap(FileIO files, String name, ArrayList<Collisionable> collList) {
+		BufferedWriter out = null;
+		try {
+			out = new BufferedWriter(new OutputStreamWriter(
+					files.writeFile(name)));
+			for(Collisionable x : collList){
+				out.write(""+x.x+"-"+x.y+"-"+x.w+"-"+x.h);
+				out.write("\n");
+			}
 		} catch (IOException e) {
 		} finally {
 			try {

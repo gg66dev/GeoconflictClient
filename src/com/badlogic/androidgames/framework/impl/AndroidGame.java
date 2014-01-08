@@ -142,4 +142,13 @@ public abstract class AndroidGame extends Activity implements Game {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    //bloquea boton para retroceder
+	@Override
+	public void onBackPressed() {
+	}
+    
+    
+    
+    
 }

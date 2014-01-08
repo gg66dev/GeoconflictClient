@@ -15,4 +15,5 @@ public interface Game {
 
     public Screen getStartScreen();
     
+    public void getSaveMapActivity();
 }
