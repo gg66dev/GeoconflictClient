@@ -122,14 +122,19 @@ public abstract class AndroidGame extends Activity implements Game {
         return screen;
     }
     
-  //para mostrar el menú de la aplicación
+  //para mostrar el menï¿½ de la aplicaciï¿½n
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
     
-    //código para cada opción de menú
+    @Override
+    public Activity getActivity(){
+    	return this;
+    }
+    
+    //cï¿½digo para cada opciï¿½n de menï¿½
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) 

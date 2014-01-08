@@ -3,13 +3,15 @@ package cl.geoconflict.screen;
 import java.util.Enumeration;
 import java.util.List;
 
+import android.content.Intent;
 import android.graphics.Color;
 import cl.geoconflict.Assets;
 import cl.geoconflict.GameStates;
+import cl.geoconflict.activity.MenuScreen_activity;
 import cl.geoconflict.animation.PlayerPoint;
 import cl.geoconflict.gameplay.Clock;
 import cl.geoconflict.gameplay.Map;
-import cl.geoconflict.gameplay.Player;
+import cl.geoconflict.gameplay.Match;
 import cl.geoconflict.gameplay.Position;
 
 import com.badlogic.androidgames.framework.Game;
@@ -22,7 +24,6 @@ public class MapaScreen extends Screen {
 
 	ArmaScreen arma = null;
 	Clock clockMatch = null; // p: tiempo partida
-	Player player = null; // p: ammo
 	Map map;
 
 	PlayerPoint playerPoints[];
@@ -58,20 +59,25 @@ public class MapaScreen extends Screen {
 		}
 	}
 
-	public void setArmaScreen(ArmaScreen armascreen, Clock clock, Player player) {
+	public void setArmaScreen(ArmaScreen armascreen, Clock clock) {
 		this.arma = armascreen;
 		this.clockMatch = clock;
-		this.player = player;
 
 		Assets.lifeplayer.scale(10, 50);
 	}
 
 	@Override
 	public void update(float deltaTime) {
+		if( !GameStates.initMatch ){
+			// FIXME
+			Intent i = new Intent(this.game.getActivity(),	MenuScreen_activity.class);
+			this.game.getActivity().startActivity(i);
+			this.game.getActivity().finish();
+		}
 		List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
-
+		
 		// cuando se actualiza GPS se envia log y lat al servidor
-		player.updatePosition();
+		Match.getPlayer().updatePosition();
 
 		// se actualiza la posicion de los jugadores
 		if (GameStates.newPosition) {
@@ -123,23 +129,23 @@ public class MapaScreen extends Screen {
 
 		// puntaje
 		g.drawTextRotate("Puntaje", 50, 100, Color.WHITE, 20, 90);
-		g.drawTextRotate(player.getScore(), 50, 120, Color.WHITE, 20, 90);
+		g.drawTextRotate(Match.getPlayer().getScore(), 50, 120, Color.WHITE, 20, 90);
 
 		// tiempo
 		g.drawTextRotate("Tiempo", -50, 100, Color.WHITE, 20, 90);
 		g.drawTextRotate(clockMatch.getTime(), -50, 120, Color.WHITE, 20, 90);
 
 		// latitud y longitud , orientacion (debug)
-		g.drawTextRotate("lat:" + this.player.getLatitud(), 150, 100, Color.GREEN,20, 90);
-		g.drawTextRotate("log:" + this.player.getLongitud(), 150, 120, Color.GREEN,20, 90);
-		g.drawTextRotate("dir:" + this.player.getDirection(), 150, 140, Color.GREEN,20, 90);
+		g.drawTextRotate("lat:" + Match.getPlayer().getLatitud(), 150, 100, Color.GREEN,20, 90);
+		g.drawTextRotate("log:" + Match.getPlayer().getLongitud(), 150, 120, Color.GREEN,20, 90);
+		g.drawTextRotate("dir:" + Match.getPlayer().getDirection(), 150, 140, Color.GREEN,20, 90);
 
 		// vida
-		for (int i = 0; i < player.getHealth(); i++)
-			g.drawPixmap(Assets.lifeplayer, 170 + (i * 15), 420);
+		for (int i = 0; i < Match.getPlayer().getHealth(); i++)
+			g.drawPixmap(Assets.lifeplayer, 170 + (i * 13), 420);
 
 		// prueba de giro jugador 0
-		playerPoints[0].setRotation( this.player.getDirection() );
+		playerPoints[0].setRotation( Match.getPlayer().getDirection() );
 		
 		// mostrar jugadores
 		for(int i = 0; i < GameStates.getPositions().size() ; i++)
@@ -164,9 +170,10 @@ public class MapaScreen extends Screen {
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
-
+//		Assets.simpleAmmo.dispose();
+//		Assets.playerWhite.dispose();
+//		Assets.playerGreen.dispose();
+//		Assets.redArrow.dispose();
+//		Assets.geogrilla.dispose();
 	}
-	
-	
 }

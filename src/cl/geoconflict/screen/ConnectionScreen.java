@@ -3,12 +3,11 @@
  */
 package cl.geoconflict.screen;
 
-
 import cl.geoconflict.Assets;
 import cl.geoconflict.GameStates;
 import cl.geoconflict.Settings;
 import cl.geoconflict.gameplay.Clock;
-import cl.geoconflict.gameplay.Player;
+import cl.geoconflict.gameplay.Match;
 
 import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
@@ -46,12 +45,12 @@ public class ConnectionScreen extends Screen {
         
         //logica del juego se puede usar GameStates
     	//se crea mapa se asocia a Player y a gps
-        Player player = new Player(20, this.game);
 		Clock clockMatch = new Clock(GameStates.timeMatch); //p: tiempo partida
+		Match.getInstance().preparePlayer(this.game);
 		ArmaScreen arma = new ArmaScreen(game);
 		MapaScreen mapa = new MapaScreen(game);
-		arma.setMapaScreen(mapa,clockMatch,player);
-		mapa.setArmaScreen(arma,clockMatch,player);
+		arma.setMapaScreen(mapa,clockMatch);
+		mapa.setArmaScreen(arma,clockMatch);
         game.setScreen(mapa);
     }
 

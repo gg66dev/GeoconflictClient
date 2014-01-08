@@ -60,7 +60,6 @@ public class GameStates {
 	static public String team;
 	static public String currMatch;
 	
-	
 	// crear partida
 	static public int timeMatch;
 
@@ -74,7 +73,7 @@ public class GameStates {
 	static public void init() {
 		client = new Client();
 	}
-
+	
 	// retorna objeto Json que se enviara al servidor para login
 	static public JSONObject getJSONLogin(FileIO files) {
 		JSONObject obj = new JSONObject();

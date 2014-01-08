@@ -1,8 +1,9 @@
 package cl.geoconflict.animation;
 
+import cl.geoconflict.gameplay.Match;
+
 import com.badlogic.androidgames.framework.Graphics;
 import com.badlogic.androidgames.framework.Pixmap;
-
 
 //animacion del arma
 public class Animation {
@@ -29,35 +30,27 @@ public class Animation {
 	}
 	
 	public void shoot(){
+		Match.getPlayer().restAmmo();
 		isStop = false;
 	}
 	
 	public void update(float dt){
-		
 		if(!isStop){
-			
 			if(frameindex < 0){
 				isStop = true;
 				frameindex = numRows;
 			}
-			
 			if(lapse > 0.09f ){
 				frameindex--;
 				lapse = 0;
 			}
 			lapse += dt;
-			
-			
 		}
 	}
-	
+
 	public void draw(Graphics g){
-		
 		g.drawPixmap(pixmap, x, y, width*frameindex ,0 , width , height );
-		
 	}
-	
-	
 	
 	public boolean isStop(){
 		return isStop;

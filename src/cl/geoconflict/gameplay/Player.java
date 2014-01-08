@@ -3,6 +3,7 @@ package cl.geoconflict.gameplay;
 import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.JSONObject;
 
+import android.util.Log;
 import cl.geoconflict.GameStates;
 import cl.geoconflict.network.Network.RequestNewCoord;
 
@@ -21,6 +22,7 @@ public class Player {
 	private Game game;
 	private Double latitud;
 	private Double longitud;
+	private boolean alive;
 	
 	public Player(int ammo, Game game){
 		this.health = 10;
@@ -32,6 +34,7 @@ public class Player {
 		//posicion se corrige cuando se asigna dimencion
 		this.x=0;
 		this.y=0;
+		this.alive = true;
 	}
 	
 	public boolean isLoaded() {
@@ -41,24 +44,18 @@ public class Player {
 	}
 	
 	public void addScore(int score){
-		if(iAmmo > 0)
-			iScore += score;
+		iScore += score;
+		Log.d("DEBUG", "puntaje: " + iScore);
 	}
 	
 	public void restAmmo(){
-		if(iAmmo>0)
+		if(iAmmo>0){
 			iAmmo--;
+			Log.d("DEBUG", "Municion: " + this.iAmmo);
+		}
 	}
 	
 	public String getScore() {
-		if(iScore < 10)
-			return "00000";
-		if(iScore < 100)
-			return "000"+  Integer.toString(iScore);
-		if(iScore < 1000)
-			return "00"+  Integer.toString(iScore);
-		if(iScore < 10000)
-			return "0"+  Integer.toString(iScore);
 		return Integer.toString(iScore);
 	}
 	
@@ -85,13 +82,11 @@ public class Player {
 		return health;
 	}
 
-	/**
-	 * @param health the health to set
-	 */
-	public void setHealth(int health) {
-		this.health = health;
+	public void damage(){
+		this.health -= 1;
+		Log.d("DEBUG", "Danio " + this.health);
 	}
-
+	
 	/**
 	 * @return the latitud
 	 */
@@ -113,6 +108,20 @@ public class Player {
 	 */
 	public float getDirection() {
 		return this.game.getInput().getDirection();
+	}
+
+	/**
+	 * @return the alive
+	 */
+	public boolean isAlive() {
+		return alive;
+	}
+
+	/**
+	 * @param alive the alive to set
+	 */
+	public void setAlive(boolean alive) {
+		this.alive = alive;
 	}
 
 	public void updatePosition(){

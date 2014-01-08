@@ -2,12 +2,14 @@ package cl.geoconflict.screen;
 
 import java.util.List;
 
+import android.content.Intent;
 import android.graphics.Color;
 import cl.geoconflict.Assets;
 import cl.geoconflict.GameStates;
+import cl.geoconflict.activity.MenuScreen_activity;
 import cl.geoconflict.animation.Animation;
 import cl.geoconflict.gameplay.Clock;
-import cl.geoconflict.gameplay.Player;
+import cl.geoconflict.gameplay.Match;
 import cl.geoconflict.network.Network.*;
 
 import com.badlogic.androidgames.framework.Game;
@@ -21,7 +23,6 @@ public class ArmaScreen extends Screen {
 
 	Animation arma;
 	Clock clockMatch;
-	Player player;
 
 	public ArmaScreen(Game game) {
 		super(game);
@@ -33,39 +34,47 @@ public class ArmaScreen extends Screen {
 		Assets.radarSimple.scale(70, 70);
 	}
 
-	public void setMapaScreen(MapaScreen mapascreen, Clock clock, Player player) {
+	public void setMapaScreen(MapaScreen mapascreen, Clock clock) {
 		this.mapa = mapascreen;
 		this.clockMatch = clock;
-		this.player = player;
 	}
 
 	@Override
 	public void update(float deltaTime) {
-		// TODO Auto-generated method stub
+		if( !GameStates.initMatch ){
+			// FIXME
+			Intent i = new Intent(this.game.getActivity(),	MenuScreen_activity.class);
+			this.game.getActivity().startActivity(i);
+			this.game.getActivity().finish();
+		}
+		
 		List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
 
 		// disminuye tiempo
 		clockMatch.update(deltaTime);
+		
 		// actualiza orientacion
-		player.getDirection();
+		Match.getPlayer().getDirection();
 
 		// cuando se actualiza GPS se envia long y lat al servidor
-		player.updatePosition();
+		Match.getPlayer().updatePosition();
+		
+		// puntaje
+		this.game.getGraphics().drawText(Match.getPlayer().getScore(), 190, 60, Color.WHITE, 40);
 
 		int len = touchEvents.size();
 		for (int i = 0; i < len; i++) {
 			TouchEvent event = touchEvents.get(i);
 			if (event.type == TouchEvent.TOUCH_UP) {
 				if (inBounds(event, 190, 290, 90, 200) && arma.isStop()) {
-					if (player.isLoaded()) {
+					if (Match.getPlayer().isLoaded()) {
 						arma.shoot();
-						player.addScore(10);
-						player.restAmmo();
 
 						// envio de posicion y orientacion al servidor
 						RequestShoot rs = new RequestShoot();
 						rs.nameRoom = GameStates.currMatch;
-						rs.shootInfo = player.getShootInfo();
+						rs.username = GameStates.username;
+						rs.shootInfo = Match.getPlayer().getShootInfo();
 						GameStates.client.sendUDP(rs);
 					}
 				}
@@ -91,12 +100,12 @@ public class ArmaScreen extends Screen {
 
 		// puntaje
 		g.drawText("puntaje", 180, 30, Color.WHITE, 20);
-		g.drawText(player.getScore(), 190, 60, Color.WHITE, 40);
+		g.drawText(Match.getPlayer().getScore(), 190, 60, Color.WHITE, 40);
 
 		// vida
 		g.drawText("vida", 190, 120, Color.WHITE, 20);
-		for (int i = 0; i < player.getHealth(); i++)
-			g.drawPixmap(Assets.lifeplayer, 190 + (i * 15), 130);
+		for (int i = 0; i < Match.getPlayer().getHealth(); i++)
+			g.drawPixmap(Assets.lifeplayer, 190 + (i * 13), 130);
 
 		// tiempo
 		g.drawText("tiempo", 200, 210, Color.WHITE, 20);
@@ -104,7 +113,7 @@ public class ArmaScreen extends Screen {
 
 		// municion
 		g.drawPixmap(Assets.ammo, 190, 290);
-		g.drawText(player.getAmmo(), 210, 340, Color.WHITE, 50);
+		g.drawText(Match.getPlayer().getAmmo(), 210, 340, Color.WHITE, 50);
 
 		// radar simple
 		g.drawPixmap(Assets.radarSimple, 0, 400);
@@ -124,8 +133,10 @@ public class ArmaScreen extends Screen {
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
-
+//		Assets.animationArma.dispose();
+//		Assets.ammo.dispose();
+//		Assets.lifeplayer.dispose();
+//		Assets.radarSimple.dispose();
 	}
 
 }

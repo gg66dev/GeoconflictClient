@@ -1,12 +1,14 @@
 package cl.geoconflict.network;
 
 import org.apache.sling.commons.json.JSONException;
+
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.minlog.Log;
 
 import cl.geoconflict.GameStates;
+import cl.geoconflict.gameplay.Match;
 import cl.geoconflict.network.Network.*;
 
 public class NetworkListener extends Listener {
@@ -128,6 +130,24 @@ public class NetworkListener extends Listener {
 			} catch (JSONException e) {
 				Log.debug(e.toString());
 			}
+		}else if ( o instanceof RequestResult ){
+			GameStates.closeRoom = true;
+			GameStates.roomAcepted = false;
+			GameStates.initMatch = false;
+			// TODO Falsa implementar quien gana
+		}else if ( o instanceof RequestGotScore ){
+			Log.debug("REQUEST SCORE");
+			RequestGotScore rgs = (RequestGotScore ) o;
+			int score = (int ) rgs.score;
+			Match.getPlayer().addScore(score);
+		}else if ( o instanceof RequestDamage){
+			RequestDamage rd = (RequestDamage ) o;
+			Match.getPlayer().damage();
+			if( rd.id == RequestDamage.damage_id.DEAD ){
+				Match.getPlayer().setAlive(false);
+			}
+			Log.debug( Integer.toString( Match.getPlayer().getHealth() ) );
+			Log.debug( Match.getPlayer().getAmmo() );
 		}
 	}
 }

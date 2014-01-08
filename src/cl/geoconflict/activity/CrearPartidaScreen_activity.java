@@ -156,7 +156,7 @@ public class CrearPartidaScreen_activity extends Activity {
 	// tarea que espera inicio de partida
 	public void InitMatchWaitTask() {
 		// display the progressbar on the screen
-		progressDialog.setMessage("Iniciando Partida...");
+		progressDialog.setMessage("Iniciando partida");
 		progressDialog.show();
 		// start the time consuming task in a new thread
 		Thread thread = new Thread() {

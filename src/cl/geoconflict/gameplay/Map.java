@@ -25,8 +25,6 @@ public class Map{
 	public Position getPosition( double x, double y){
 		Position pos = new Position();
 		Log.debug("(x, y): (" + x + ", " + y + " ) ");
-//		pos.x = ( screenWidth/2 + (x * Map.FACTOR) * screenWidth/Map.WIDTH );
-//		pos.y = ( screenHeight/2 + (y * Map.FACTOR) * screenHeight/Map.HEIGHT );
 		pos.x = ( (x * Map.FACTOR) * screenWidth/Map.WIDTH );
 		pos.y = ( (y * Map.FACTOR) * screenHeight/Map.HEIGHT );
 		return pos;

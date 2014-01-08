@@ -7,7 +7,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
 
 public class Network {
-	public static String SERVER_IP = "**.**.**.**";
+	public static String SERVER_IP = "186.37.127.50";
 	public static int PORT_TCP = 54666;
 	public static int PORT_UDP = 54888;
 	
@@ -38,6 +38,10 @@ public class Network {
         kryo.register(RequestRoomUpdate.class);
         kryo.register(RequestLeaveRoom.class);
         kryo.register(RequestChangeTime.class);
+        kryo.register(RequestDamage.class);
+        kryo.register(RequestDamage.damage_id.class);
+        kryo.register(RequestGotScore.class);
+        kryo.register(RequestResult.class);
     }
 	
 	/**
@@ -129,6 +133,7 @@ public class Network {
      public static class RequestShoot{
     	 public JSONObject shootInfo;
     	 public String nameRoom;
+    	 public String username;
      }
      //actualiza servidor con nueva coordanada cada vez que llega
      public static class RequestNewCoord{
@@ -147,5 +152,20 @@ public class Network {
      public static class RequestChangeTime{
     	 public String timeMatch;
     	 public String nameRoom;
+     }
+     
+     public static class RequestDamage{
+    	 public damage_id id; 
+    	 public enum damage_id {
+    		 DAMAGE, DEAD
+    	 }
+     }
+     
+     public static class RequestGotScore{
+    	 public int score;
+     }
+     
+     public static class RequestResult{
+    	 public int result;
      }
 }

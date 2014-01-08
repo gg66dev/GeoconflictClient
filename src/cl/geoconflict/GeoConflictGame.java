@@ -1,10 +1,11 @@
-/**
+/** Clase singleton que instancia el juego
  * 
  */
 package cl.geoconflict;
 
 
 import cl.geoconflict.screen.ConnectionScreen;
+
 import com.badlogic.androidgames.framework.Screen;
 import com.badlogic.androidgames.framework.impl.AndroidGame;
 import com.esotericsoftware.minlog.Log;
@@ -25,9 +26,4 @@ public class GeoConflictGame extends AndroidGame {
 		Log.set(Log.LEVEL_DEBUG);
 		return new ConnectionScreen(this);
 	}
-
-	
-	
-	
-	
 }
