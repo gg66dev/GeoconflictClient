@@ -280,11 +280,6 @@ public class GameStates {
 		
 	}
 
-	public static void disposeGame() {
-		// TODO Auto-generated method stub
-		
-	}
-
 	public static void EndGame() {
 		closeRoom = true;
 		roomAcepted = false;
