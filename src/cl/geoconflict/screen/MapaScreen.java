@@ -76,6 +76,9 @@ public class MapaScreen extends Screen {
 		}
 		List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
 		
+		// disminuye tiempo
+		clockMatch.update(deltaTime);
+		
 		// cuando se actualiza GPS se envia log y lat al servidor
 		Match.getPlayer().updatePosition();
 

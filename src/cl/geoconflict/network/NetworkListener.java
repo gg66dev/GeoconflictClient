@@ -49,7 +49,7 @@ public class NetworkListener extends Listener {
 				Log.info("registro con exito");
 			} else if (answer.id == RequestAnswer.answer_id.REGISTER
 					&& !answer.accepted) {
-				Log.info("erro en registro");
+				Log.info("Error en el registro");
 				GameStates.error = true;
 			}else if (answer.id == RequestAnswer.answer_id.CREATEROOM
 					&& answer.accepted) {

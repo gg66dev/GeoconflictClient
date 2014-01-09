@@ -7,7 +7,8 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
 
 public class Network {
-	public static String SERVER_IP = "192.168.0.5";
+//	public static String SERVER_IP = "kennethpeet.no-ip.biz";
+	public static String SERVER_IP = "192.168.2.103";
 	public static int PORT_TCP = 54666;
 	public static int PORT_UDP = 54888;
 	
@@ -85,7 +86,6 @@ public class Network {
      */
     public static  class RequestCloseRoom{
     	public String userNameRoom;
-    	public int result;
     }
     /**
      * Request de entrar a la sala

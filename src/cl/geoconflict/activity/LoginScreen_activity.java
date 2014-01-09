@@ -107,10 +107,12 @@ public class LoginScreen_activity extends Activity {
 				while (true) {
 					if (GameStates.logged) {
 						result = true;
+						GameStates.logged = false;
 						break;
 					}
 					if (GameStates.error) {
 						result = false;
+						GameStates.error = false;
 						break;
 					}
 					if(!GameStates.client.isConnected()){

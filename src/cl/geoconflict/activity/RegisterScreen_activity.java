@@ -58,7 +58,7 @@ public class RegisterScreen_activity extends Activity {
 		AlertDialog.Builder alt_bld = new AlertDialog.Builder(this);
 
 		if (username.isEmpty() && passwd.isEmpty() && email.isEmpty()) {
-			alt_bld.setMessage("no deben haber campos vacios");
+			alt_bld.setMessage("No deben haber campos vacios");
 			alt_bld.setCancelable(false);
 			alt_bld.setPositiveButton("Ok", null);
 			alt_bld.show();
@@ -68,12 +68,12 @@ public class RegisterScreen_activity extends Activity {
 			alt_bld.setPositiveButton("Ok", null);
 			alt_bld.show();
 		} else if (passwd.length() < 4) {
-			alt_bld.setMessage("password debe tener mas de cuatro caracteres");
+			alt_bld.setMessage("Password debe tener mas de cuatro caracteres");
 			alt_bld.setCancelable(false);
 			alt_bld.setPositiveButton("Ok", null);
 			alt_bld.show();
 		} else if (!passwd.equals(passwdC)) {
-			alt_bld.setMessage("los password deben coincidir");
+			alt_bld.setMessage("Los password deben coincidir");
 			alt_bld.setCancelable(false);
 			alt_bld.setPositiveButton("Ok", null);
 			alt_bld.show();
@@ -87,7 +87,7 @@ public class RegisterScreen_activity extends Activity {
 			// thread que espera respuesta al registro
 			RegisterWaitTask();
 		} else {
-			alt_bld.setMessage("no se tiene conección con el servidor");
+			alt_bld.setMessage("No se tiene coneccion con el servidor");
 			alt_bld.setCancelable(false);
 			alt_bld.setPositiveButton("Ok", null);
 			alt_bld.show();
@@ -119,7 +119,7 @@ public class RegisterScreen_activity extends Activity {
 
 		// display the progressbar on the screen
 		progressDialog = new ProgressDialog(this);
-		progressDialog.setMessage("Registrando nuevo usuario...");
+		progressDialog.setMessage("Registrando nuevo usuario");
 		progressDialog.show();
 
 		// start the time consuming task in a new thread
@@ -128,19 +128,20 @@ public class RegisterScreen_activity extends Activity {
 
 				while (true) {
 					if (GameStates.registered) {
-						Log.d("debug", "se a registrado");
+						Log.d("debug", "Se ha registrado");
 						result = true;
+						GameStates.registered = false;
 						break;
 					}
 					if (GameStates.error) {
 						result = false;
+						GameStates.error = false;
 						break;
 					}
 					if (!GameStates.client.isConnected()) {
 						progressDialog.dismiss();
 						return;
 					}
-
 				}
 				// Now we are on a different thread than UI thread
 				// and we would like to update our UI, as this task is completed
@@ -180,7 +181,7 @@ public class RegisterScreen_activity extends Activity {
 					});
 			alt_bld.show();
 		} else {
-			alt_bld.setMessage("ERROR al registrarse -- usuario ya existe");
+			alt_bld.setMessage("Error al registrarse, Â¡usuario ya existe!");
 		}
 		alt_bld.setCancelable(false);
 		alt_bld.setPositiveButton("Ok", null);
