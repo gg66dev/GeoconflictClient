@@ -87,6 +87,16 @@ public class NetworkListener extends Listener {
 					&& !answer.accepted) {
 				// no pudo inicio partida
 				Log.info("No se inicia la partida");
+			}else if (answer.id == RequestAnswer.answer_id.CLOSEROOM
+					&& answer.accepted) {
+				GameStates.closeRoom = true;
+				GameStates.error = false;
+				Log.info("se cerro la sala");
+			}else if (answer.id == RequestAnswer.answer_id.CLOSEROOM
+					&& !answer.accepted) {
+				GameStates.closeRoom = false;
+				GameStates.error = true;
+				Log.info("no se cerro la sala");
 			}
 		} else if (o instanceof RequestListRoom) {
 			// lista salas disponibles
@@ -131,9 +141,7 @@ public class NetworkListener extends Listener {
 				Log.debug(e.toString());
 			}
 		}else if ( o instanceof RequestResult ){
-			GameStates.closeRoom = true;
-			GameStates.roomAcepted = false;
-			GameStates.initMatch = false;
+			GameStates.EndGame();
 			// TODO Falsa implementar quien gana
 		}else if ( o instanceof RequestGotScore ){
 			Log.debug("REQUEST SCORE");
@@ -148,6 +156,11 @@ public class NetworkListener extends Listener {
 			}
 			Log.debug( Integer.toString( Match.getPlayer().getHealth() ) );
 			Log.debug( Match.getPlayer().getAmmo() );
+		}else if( o instanceof RequestLoadMap){
+			RequestLoadMap rlm = (RequestLoadMap ) o;
+			GameStates.mapLoaded = true;
+			GameStates.loadMapFromRequest(rlm.map);
+			
 		}
 	}
 }

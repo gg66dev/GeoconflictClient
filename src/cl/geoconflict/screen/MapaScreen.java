@@ -100,9 +100,6 @@ public class MapaScreen extends Screen {
 			GameStates.newPosition = false;
 		}
 
-		// disminuye tiempo
-		clockMatch.update(deltaTime);
-
 		int len = touchEvents.size();
 		for (int i = 0; i < len; i++) {
 			TouchEvent event = touchEvents.get(i);
@@ -114,7 +111,7 @@ public class MapaScreen extends Screen {
 			}
 			
 		}
-
+		
 	}
 
 	@Override
@@ -153,6 +150,15 @@ public class MapaScreen extends Screen {
 
 		// municion
 		g.drawPixmap(Assets.simpleAmmo, 0, 400);
+		
+		
+		//dibujar mapa si esta cargado
+		if(GameStates.mapLoaded){
+			for(int i =0; i < GameStates.collList.size() ; i++){
+				GameStates.collList.get(i).draw(g);
+			}
+			
+		}
 		
 	}
 

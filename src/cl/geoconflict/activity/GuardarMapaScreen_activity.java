@@ -9,10 +9,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
+import cl.geoconflict.GameStates;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -40,7 +43,10 @@ public class GuardarMapaScreen_activity extends Activity {
 	
 	public void onClick_back(View v) {
 		//guarda mapa denuevo con el nombre escogido
-		RenameTempFile(nombreMapa.getText().toString());
+		if(!nombreMapa.getText().toString().equals("")){
+			RenameTempFile(nombreMapa.getText().toString());
+		}
+		GameStates.createMap = false;	
 		
 		Intent i = new Intent(GuardarMapaScreen_activity.this,
 				StartScreen_activity.class);
@@ -66,12 +72,13 @@ public class GuardarMapaScreen_activity extends Activity {
 					new FileOutputStream(outputfile)));
 			//traspasa contenido
 			while ((line = in.readLine()) != null) {
+				Log.d("debug",line);
 				out.write(line);
 				out.write("\n");
 			}
-			//borra temporal
-			File file = new File(externalStoragePath + ".Temp");
-			file.delete();
+			//borra temporal -- no guarda en android v4?
+			//File file = new File(externalStoragePath + ".Temp");
+			//file.delete();
 			
 		} catch (IOException e) {
 			// :( It's ok we have defaults

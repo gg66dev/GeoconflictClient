@@ -17,12 +17,8 @@ import com.badlogic.androidgames.framework.Input.TouchEvent;
 public class CrearMapaScreen extends Screen {
 
 	GameButton drop;
-	GameButton h_add;
-	GameButton h_subtract;
 	GameButton new_c;
 	GameButton save;
-	GameButton w_add;
-	GameButton w_substract;
 
 	// Contador del tiempo de presionado del boton
 	int count = 0;
@@ -32,25 +28,18 @@ public class CrearMapaScreen extends Screen {
 	boolean selected = false;
 	Collisionable c = null;
 	ArrayList<Collisionable> collList;
-
+	int currSelected;
+	
 	public CrearMapaScreen(Game game) {
 		super(game);
 		Graphics g = game.getGraphics();
 
 		save = new GameButton(50, 64, Assets.b_save);
-		h_add = new GameButton(50, 64, Assets.b_h_add);
-		h_subtract = new GameButton(50, 65, Assets.b_h_subtract);
-		w_add = new GameButton(50, 64, Assets.b_w_add);
-		w_substract = new GameButton(50, 64, Assets.b_w_subtract);
 		new_c = new GameButton(64, 50, Assets.b_new_c);
 		drop = new GameButton(64, 50, Assets.b_drop);
 
-		save.setPosition(g.getWidth() - 50, 0);
-		h_add.setPosition(g.getWidth() - 50, 74);
-		h_subtract.setPosition(g.getWidth() - 50, 148);
-		w_add.setPosition(g.getWidth() - 50, 222);
-		w_substract.setPosition(g.getWidth() - 50, 292);
-		new_c.setPosition(g.getWidth() / 2, g.getHeight() - 64);
+		save.setPosition(g.getWidth() - 50, g.getHeight() - 64);
+		new_c.setPosition((g.getWidth() / 2) - 25, g.getHeight() - 64);
 		drop.setPosition(50, g.getHeight() - 64);
 
 		Assets.geogrilla.scale(g.getWidth() - 30, g.getHeight() - 30);
@@ -73,22 +62,6 @@ public class CrearMapaScreen extends Screen {
 					//cambia a otra actividad y sale de GeoConflictGame
 					game.getSaveMapActivity();
 				}
-				if (inBounds(event, h_add.getX(), h_add.getY(), h_add.getW(),
-						h_add.getH())) {
-					h_add.isPressed(true);
-				}
-				if (inBounds(event, h_subtract.getX(), h_subtract.getY(),
-						h_subtract.getW(), h_subtract.getH())) {
-					h_subtract.isPressed(true);
-				}
-				if (inBounds(event, w_add.getX(), w_add.getY(), w_add.getW(),
-						w_add.getH())) {
-					w_add.isPressed(true);
-				}
-				if (inBounds(event, w_substract.getX(), w_substract.getY(),
-						w_substract.getW(), w_substract.getH())) {
-					w_substract.isPressed(true);
-				}
 				if (inBounds(event, new_c.getX(), new_c.getY(), new_c.getW(),
 						new_c.getH())) {
 					new_c.isPressed(true);
@@ -105,11 +78,14 @@ public class CrearMapaScreen extends Screen {
 				}
 				// revisa la lista de coliisionables para ver si vuelve a
 				// seleccionar uno
+				
 				int j = 0;
 				for (Collisionable x : collList) {
 					if (x.inBounds(event)) {
+						drop.isPressed(true);
 						selected = true;
 						c = collList.get(j);
+						currSelected = j;
 						break;
 					}
 					j++;
@@ -121,14 +97,16 @@ public class CrearMapaScreen extends Screen {
 				if (newCollisionable)
 					collList.add(c);
 				save.isPressed(false);
-				h_add.isPressed(false);
-				h_subtract.isPressed(false);
-				w_add.isPressed(false);
-				w_substract.isPressed(false);
 				new_c.isPressed(false);
 				drop.isPressed(false);
 				newCollisionable = false;
 				selected = false;
+			
+				//ve si colisiona con el drop
+				if(c != null && collList.size() > 0 && isBounds(drop,c)){
+					//lo quita de la lista
+					collList.remove(currSelected);
+				}
 			}
 			if (event.type == TouchEvent.TOUCH_DRAGGED) {
 				if (newCollisionable || selected) {
@@ -136,7 +114,16 @@ public class CrearMapaScreen extends Screen {
 				}
 			}
 		}
+		
+	}
 
+	private boolean isBounds(GameButton drop, Collisionable c) {
+		int e = 10;
+		if(c.x  > drop.getX() - e && c.x < drop.getX()+ drop.getW() + e 
+				&& c.y  > drop.getY() -e && c.y  < drop.getY()+ drop.getH() + e ) 
+			return true;
+		else
+			return false;
 	}
 
 	@Override
@@ -149,12 +136,8 @@ public class CrearMapaScreen extends Screen {
 		g.drawPixmap(Assets.geogrilla, 0, 0);
 
 		drop.draw(g);
-		h_subtract.draw(g);
 		new_c.draw(g);
 		save.draw(g);
-		w_add.draw(g);
-		w_substract.draw(g);
-		h_add.draw(g);
 
 		if (c != null && newCollisionable) {
 			c.draw(g);
@@ -181,12 +164,8 @@ public class CrearMapaScreen extends Screen {
 	public void dispose() {
 		Assets.geogrilla.dispose();
 		Assets.b_drop.dispose();
-		Assets.b_h_add.dispose();
-		Assets.b_h_subtract.dispose();
 		Assets.b_new_c.dispose();
 		Assets.b_save.dispose();
-		Assets.b_w_add.dispose();
-		Assets.b_w_subtract.dispose();
 	}
 
 }

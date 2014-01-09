@@ -125,6 +125,7 @@ public class ConnectionManager {
 					//cierra partida
 					if(closeRoom){
 						RequestCloseRoom rcr = new RequestCloseRoom();
+						Log.d("cierra sala",GameStates.username);
 						rcr.userNameRoom = GameStates.username;
 						GameStates.client.sendTCP(rcr);
 						closeRoom = false;

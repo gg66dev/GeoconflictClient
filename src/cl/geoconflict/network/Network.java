@@ -7,7 +7,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
 
 public class Network {
-	public static String SERVER_IP = "186.37.127.50";
+	public static String SERVER_IP = "192.168.0.5";
 	public static int PORT_TCP = 54666;
 	public static int PORT_UDP = 54888;
 	
@@ -42,7 +42,8 @@ public class Network {
         kryo.register(RequestDamage.damage_id.class);
         kryo.register(RequestGotScore.class);
         kryo.register(RequestResult.class);
-    }
+        kryo.register(RequestLoadMap.class);
+	}
 	
 	/**
 	 * Request de login
@@ -84,6 +85,7 @@ public class Network {
      */
     public static  class RequestCloseRoom{
     	public String userNameRoom;
+    	public int result;
     }
     /**
      * Request de entrar a la sala
@@ -168,5 +170,9 @@ public class Network {
      
      public static class RequestResult{
     	 public int result;
+     }
+   //se emplea para compartir el mapa cuando inicia la partida
+     public static class RequestLoadMap{
+    	 public JSONObject map;
      }
 }

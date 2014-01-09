@@ -257,4 +257,43 @@ public class GameStates {
 		}
 		return obj;
 	}
+
+	//Carga mapa del request LoadMapRequest
+	public static void loadMapFromRequest(JSONObject map) {
+		JSONArray collJSONArray;
+		try {
+			collJSONArray = map.getJSONArray("collList");
+			for(int i = 0; i <  collJSONArray.length(); i++){
+				String[] coll = collJSONArray.get(i).toString().split("-");
+				int x = Integer.parseInt(coll[0]);
+				int y = Integer.parseInt(coll[1]);
+				int w = Integer.parseInt(coll[2]);
+				int h = Integer.parseInt(coll[3]);
+				Log.d("debug", coll[0]+","+coll[1]+","+coll[2]+","+coll[3]);
+				GameStates.collList.add(new Collisionable(x,y,w,h));
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
+
+	public static void disposeGame() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public static void EndGame() {
+		closeRoom = true;
+		roomAcepted = false;
+		initMatch = false;
+		mapLoaded = false;
+		hasTeam = false;
+		collList.clear();
+		teamBlack.clear();
+		teamRed.clear();
+		
+	}
 }

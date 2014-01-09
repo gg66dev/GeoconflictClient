@@ -44,5 +44,4 @@ public class Clock {
 		return sMinute + ":" + sSecond;
 	}
 	
-	
 }

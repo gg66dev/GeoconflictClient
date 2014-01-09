@@ -25,7 +25,7 @@ public class CargarMapaScreen_activity extends Activity {
 	String externalStoragePath;
 	Spinner spinner;
 	TextView msgScreen;
-	
+
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -39,23 +39,26 @@ public class CargarMapaScreen_activity extends Activity {
 		spinner = (Spinner) findViewById(R.id.spinner1);
 		msgScreen = (TextView) findViewById(R.id.msgScreen);
 		List<String> list = new ArrayList<String>();
-		
-		
+
 		File f = new File(externalStoragePath + "/GeoConflictMaps");
 		File file[] = f.listFiles();
-		if(file!=null){
+		if (file != null) {
+			list.add("");
+			int currPosition = 0;
 			for (int i = 0; i < file.length; i++) {
+				if (GameStates.mapLoaded
+						&& GameStates.mapFile.equals(file[i].getName()))
+					currPosition = i; //posicion de la actual seleccion
 				list.add(file[i].getName());
-				Log.d("debug",file[i].getName());
+				Log.d("debug", file[i].getName());
 			}
-		}
-		else{
+			spinner.setSelection(currPosition);
+		} else {
 			spinner.setVisibility(View.INVISIBLE);
-			GameStates.mapFile  = "no hay mapas en la memoria SD";
+			GameStates.mapFile = "no hay mapas en la memoria SD";
 			msgScreen.setText("No Hay Mapas");
 		}
-		/*ocultar spinner cuando no haya archivos*/
-		
+		/* ocultar spinner cuando no haya archivos */
 
 		// obtienen un arreglo de String para mostrarlo en spinners
 		String[] simpleNameFileArray = new String[list.size()];
@@ -66,15 +69,19 @@ public class CargarMapaScreen_activity extends Activity {
 				android.R.layout.simple_spinner_item, simpleNameFileArray);
 		spinner.setAdapter(adapterSector);
 		
-		
-		
 		spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-
 
 			public void onItemSelected(AdapterView<?> parentView,
 					View selectedItemView, int position, long id) {
-				GameStates.mapFile =  parentView.getItemAtPosition(position).toString();
-				GameStates.mapLoaded = true;
+				String option = parentView.getItemAtPosition(position)
+						.toString();
+				if (!option.equals("")) {
+					GameStates.mapFile = option;
+					GameStates.mapLoaded = true;
+				} else {
+					GameStates.mapFile = "no se ha seleccionado ningun mapa";
+					GameStates.mapLoaded = false;
+				}
 			}
 
 			@Override
@@ -87,21 +94,22 @@ public class CargarMapaScreen_activity extends Activity {
 		});
 
 	}
-	
+
 	// hace lo mismo que la funcion de retroceso
-		public void onClick_back(View v) {
-			if(GameStates.mapLoaded)
-				Toast.makeText(getApplicationContext(), 
-						"se cargo mapa, " + GameStates.mapFile, Toast.LENGTH_SHORT).show();
-			else
-				Toast.makeText(getApplicationContext(), 
-						 GameStates.mapFile, Toast.LENGTH_SHORT).show();
-			finish();
-		}
-		
-		@Override
-		public void onBackPressed() {
-			finish();
-		}
+	public void onClick_back(View v) {
+		if (GameStates.mapLoaded)
+			Toast.makeText(getApplicationContext(),
+					"se cargo mapa, " + GameStates.mapFile, Toast.LENGTH_SHORT)
+					.show();
+		else
+			Toast.makeText(getApplicationContext(), GameStates.mapFile,
+					Toast.LENGTH_SHORT).show();
+		finish();
+	}
+
+	@Override
+	public void onBackPressed() {
+		finish();
+	}
 
 }

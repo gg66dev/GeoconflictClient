@@ -66,17 +66,9 @@ public class ConnectionScreen extends Screen {
 					PixmapFormat.ARGB4444);
 			Assets.b_drop = g.newPixmap("creador-mapa/drop.png",
 					PixmapFormat.ARGB4444);
-			Assets.b_h_add = g.newPixmap("creador-mapa/h_add.png",
-					PixmapFormat.ARGB4444);
-			Assets.b_h_subtract = g.newPixmap("creador-mapa/h_subtract.png",
-					PixmapFormat.ARGB4444);
 			Assets.b_new_c = g.newPixmap("creador-mapa/new_c.png",
 					PixmapFormat.ARGB4444);
 			Assets.b_save = g.newPixmap("creador-mapa/save.png",
-					PixmapFormat.ARGB4444);
-			Assets.b_w_add = g.newPixmap("creador-mapa/w_add.png",
-					PixmapFormat.ARGB4444);
-			Assets.b_w_subtract = g.newPixmap("creador-mapa/w_subtract.png",
 					PixmapFormat.ARGB4444);
 			Settings.load(game.getFileIO());
 			game.setScreen(new CrearMapaScreen(game));
