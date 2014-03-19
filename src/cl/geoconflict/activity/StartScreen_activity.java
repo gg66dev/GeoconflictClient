@@ -29,7 +29,9 @@ public class StartScreen_activity extends Activity {
 		if (!GameStates.staticClassStarted) {
 			GameStates.init(); // inicia cliente
 			GameProperties.init(this);// inicia recursos que luego usara el
-										// juego
+									// juego
+			GameStates.loadConfiguration(GameProperties
+					.getFileIO(),this);//carga ip del servidor
 			ConnectionManager.init(this);
 			GameStates.staticClassStarted = true;
 		}

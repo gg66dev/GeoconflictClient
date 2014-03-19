@@ -10,7 +10,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
+import org.apache.sling.commons.json.JSONException;
+import org.apache.sling.commons.json.JSONObject;
+
+import android.util.Log;
 import cl.geoconflict.gameplay.Collisionable;
+import cl.geoconflict.network.Network;
 
 import com.badlogic.androidgames.framework.FileIO;
 
@@ -20,41 +25,92 @@ import com.badlogic.androidgames.framework.FileIO;
  */
 public class Settings {
 	public static boolean soundEnabled = true;
-
-	public static void load(FileIO files) {
+	public static String ipServer = "";
+	public static String returnMsg = "";
+	
+	public static boolean load(FileIO files) {
 		BufferedReader in = null;
 		try {
 			in = new BufferedReader(new InputStreamReader(
-					files.readFile(".geoconflict")));
-			soundEnabled = Boolean.parseBoolean(in.readLine());
+					files.readFile("geoconflict.conf.txt")));
+			JSONObject obj = new JSONObject(in.readLine());
+			//carga configuracion
+			soundEnabled = Boolean.parseBoolean((String) obj.get("sound"));
+			ipServer = (String)obj.get("server");
 		} catch (IOException e) {
 			// :( It's ok we have defaults
+			return false;
 		} catch (NumberFormatException e) {
 			// :/ It's ok, defaults save our day
+			return false;
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return false;
 		} finally {
 			try {
 				if (in != null)
 					in.close();
 			} catch (IOException e) {
+				return false;
 			}
 		}
+		return true;
 	}
 
-	public static void save(FileIO files) {
+	//valida formato de la ip
+	public static boolean validarIP() {
+		if(ipServer.equals("***.***.***.***")){
+			returnMsg = "-no se ha asignado Ip del servidor";
+			return false;
+		}
+		String[] str = ipServer.split("\\.");
+		if(str.length != 4){
+			returnMsg = "-error ingreso IP";
+			return false;
+		}
+		for(int i = 0; i < str.length;i++){
+			if(!isInteger(str[i])){
+				returnMsg = "-error ingreso IP";
+				return false;
+			}
+		}
+		return true;
+	}
+	public static boolean isInteger(String s) {
+	    try { 
+	        Integer.parseInt(s); 
+	    } catch(NumberFormatException e) { 
+	        return false; 
+	    }
+	    // only got here if we didn't return false
+	    return true;
+	}
+	
+	
+	public static boolean save(FileIO files) {
 		BufferedWriter out = null;
+		JSONObject obj = new JSONObject();
 		try {
+			obj.put("sound",Boolean.toString(soundEnabled));
+			obj.put("server","***.***.***.***"); //talves despues poner un servidor por defecto
 			out = new BufferedWriter(new OutputStreamWriter(
-					files.writeFile(".geoconflict")));
-			out.write(Boolean.toString(soundEnabled));
+					files.writeFile("geoconflict.conf.txt")));
+			out.write(obj.toString());
 			out.write("\n");
 		} catch (IOException e) {
+			return false;
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return false;
 		} finally {
 			try {
 				if (out != null)
 					out.close();
 			} catch (IOException e) {
+				return false;
 			}
 		}
+		return true;
 	}
 	
 	

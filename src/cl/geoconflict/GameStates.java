@@ -13,8 +13,11 @@ import org.apache.sling.commons.json.JSONObject;
 import com.badlogic.androidgames.framework.FileIO;
 import com.esotericsoftware.kryonet.Client;
 
+import android.app.Activity;
 import android.util.Log;
+import android.widget.Toast;
 import cl.geoconflict.gameplay.Collisionable;
+import cl.geoconflict.network.Network;
 import cl.geoconflict.utils.HashUtil;
 
 /*
@@ -79,9 +82,29 @@ public class GameStates {
 	}
 
 	static public void init() {
+		
+		//carga ip de servidor de archivo configuracion
 		client = new Client();
 	}
 	
+	//carga configuracion de un archivo, si el archivo no exite lo crea
+	public static void loadConfiguration(FileIO files, Activity ac) {
+		if(!Settings.load(files)){
+			if(Settings.save(files))
+				Settings.load(files);
+			else
+				Toast.makeText(ac, "no se pudo crear archivo configuracion", Toast.LENGTH_SHORT).show();
+		}
+		if(!Settings.validarIP()){
+			//si hay una configuracion mal cargada muestra mensaje
+			Toast.makeText(ac, Settings.returnMsg, Toast.LENGTH_SHORT).show();
+		}else{
+			Log.d("debug","se cargo bien la IP");
+			Network.SERVER_IP = Settings.ipServer;
+		}
+				
+	}
+
 	// retorna objeto Json que se enviara al servidor para login
 	static public JSONObject getJSONLogin(FileIO files) {
 		JSONObject obj = new JSONObject();
