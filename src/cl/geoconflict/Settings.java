@@ -13,9 +13,7 @@ import java.util.ArrayList;
 import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.JSONObject;
 
-import android.util.Log;
 import cl.geoconflict.gameplay.Collisionable;
-import cl.geoconflict.network.Network;
 
 import com.badlogic.androidgames.framework.FileIO;
 

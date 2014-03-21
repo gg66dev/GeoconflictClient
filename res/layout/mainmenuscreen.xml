@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
+    android:background="@drawable/background3"
     android:orientation="vertical"
     tools:context=".MainMenuScreen_activity" >
 
@@ -24,28 +24,12 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/relativeLayout3"
-        android:layout_width="fill_parent"
-        android:layout_height="46dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true" >
-
-        <Button
-            android:id="@+id/btn_sound"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:background="@drawable/sound_on"
-            android:onClick="onClick_sound" />
-    </RelativeLayout>
-
-    <RelativeLayout
         android:id="@+id/relativeLayout2"
         android:layout_width="match_parent"
         android:layout_height="238dp"
-        android:layout_above="@+id/relativeLayout3"
-        android:layout_alignParentLeft="true" >
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="21dp" >
 
         <Button
             android:id="@+id/register"

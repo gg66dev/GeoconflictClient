@@ -38,11 +38,12 @@ public class CrearMapaScreen extends Screen {
 		new_c = new GameButton(64, 50, Assets.b_new_c);
 		drop = new GameButton(64, 50, Assets.b_drop);
 
-		save.setPosition(g.getWidth() - 50, g.getHeight() - 64);
-		new_c.setPosition((g.getWidth() / 2) - 25, g.getHeight() - 64);
-		drop.setPosition(50, g.getHeight() - 64);
+		save.setPosition(g.getWidth() - 60, g.getHeight() - 54);
+		new_c.setPosition((g.getWidth() / 2) - 35, g.getHeight() - 50);
+		drop.setPosition(30, g.getHeight() - 50);
 
-		Assets.geogrilla.scale(g.getWidth() - 30, g.getHeight() - 30);
+		Assets.geogrilla.scale(g.getWidth(), g.getHeight() - 30);
+		Assets.mapamundi.scale(g.getWidth(), g.getHeight() - 50);
 		collList = new ArrayList<Collisionable>();
 	}
 
@@ -130,9 +131,11 @@ public class CrearMapaScreen extends Screen {
 	public void present(float deltaTime) {
 		Graphics g = game.getGraphics();
 
-		g.clear(Color.BLACK);
+		g.clear(Color.BLUE);
 
 		// mostrar grilla
+		g.drawPixmap(Assets.mapamundi, 0, 0);
+		
 		g.drawPixmap(Assets.geogrilla, 0, 0);
 
 		drop.draw(g);
@@ -162,6 +165,7 @@ public class CrearMapaScreen extends Screen {
 
 	@Override
 	public void dispose() {
+		Assets.mapamundi.dispose();
 		Assets.geogrilla.dispose();
 		Assets.b_drop.dispose();
 		Assets.b_new_c.dispose();

@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
+    android:background="@drawable/background5"
     android:orientation="vertical"
     tools:context=".CrearPartidaScreen_activity" >
 
@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
+        android:layout_marginBottom="25dp"
         android:layout_alignParentRight="true" >
 
         <Button
@@ -39,6 +40,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:text="@string/partida"
+            android:textColor="@color/opaque_red"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="@dimen/font_size" />
     </RelativeLayout>
@@ -109,8 +111,8 @@
             android:id="@+id/small_layer_black4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/small_layer_black1"
             android:layout_alignParentTop="true"
+            android:layout_alignRight="@+id/small_layer_black1"
             android:layout_marginTop="10dp"
             android:src="@drawable/small_layer_black" />
 
@@ -146,28 +148,31 @@
             android:textColor="#FFFFFF" />
 
         <ImageView
-            android:id="@+id/clock"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
-            android:layout_below="@+id/small_layer_black2"
-            android:layout_toLeftOf="@+id/small_layer_black2"
-            android:src="@drawable/tenmin_black" />
+            android:id="@+id/iv_waitInit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignRight="@+id/small_layer_black2" />
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="100dp"
             android:layout_height="80dp"
             android:layout_alignBottom="@+id/clock"
-            android:layout_toRightOf="@+id/tx_four"
+            android:layout_alignRight="@+id/small_layer_black2"
             android:text="@string/waitMsg"
+            android:textColor="@color/opaque_red"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <ImageView
-            android:id="@+id/iv_waitInit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignRight="@+id/small_layer_black2" />
+            android:id="@+id/clock"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/small_layer_black2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="60dp"
+            android:src="@drawable/tenmin_black" />
+
     </RelativeLayout>
 
 </RelativeLayout>

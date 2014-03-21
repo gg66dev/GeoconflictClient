@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
+    android:background="@drawable/background4"
     android:orientation="vertical"
     tools:context=".CrearPartidaScreen_activity" >
 
@@ -92,6 +92,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
+        android:textColor="@color/opaque_red"
         android:layout_marginTop="29dp"
         android:text="@string/tx_crearpartida"
         android:textAppearance="?android:attr/textAppearanceMedium"

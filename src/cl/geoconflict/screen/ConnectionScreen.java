@@ -39,7 +39,9 @@ public class ConnectionScreen extends Screen {
 					PixmapFormat.ARGB4444);
 			Assets.ammo = g.newPixmap("arma-mapa/ammo.jpg",
 					PixmapFormat.ARGB4444);
-			Assets.geogrilla = g.newPixmap("arma-mapa/geogrilla.jpg",
+			Assets.geogrilla = g.newPixmap("arma-mapa/geogrilla.png",
+					PixmapFormat.ARGB4444);
+			Assets.mapamundi = g.newPixmap("arma-mapa/mapamundi.jpg",
 					PixmapFormat.ARGB4444);
 			Assets.simpleAmmo = g.newPixmap("arma-mapa/simpleAmmo.jpg",
 					PixmapFormat.ARGB4444);
@@ -62,7 +64,9 @@ public class ConnectionScreen extends Screen {
 			game.setScreen(mapa);
 		} else if (GameStates.createMap) {
 			/*Carga Creador de Mapas */
-			Assets.geogrilla = g.newPixmap("arma-mapa/geogrilla.jpg",
+			Assets.geogrilla = g.newPixmap("arma-mapa/geogrilla.png",
+					PixmapFormat.ARGB4444);
+			Assets.mapamundi = g.newPixmap("arma-mapa/mapamundi.png",
 					PixmapFormat.ARGB4444);
 			Assets.b_drop = g.newPixmap("creador-mapa/drop.png",
 					PixmapFormat.ARGB4444);

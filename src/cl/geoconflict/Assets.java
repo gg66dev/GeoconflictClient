@@ -18,6 +18,7 @@ public class Assets {
     public static Pixmap radarSimple;
     public static Pixmap ammo;
     public static Pixmap geogrilla;
+    public static Pixmap mapamundi;
     public static Pixmap playerWhite;
     public static Pixmap playerGreen;
     public static Pixmap simpleAmmo;

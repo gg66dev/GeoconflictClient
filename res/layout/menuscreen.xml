@@ -10,7 +10,6 @@
         android:id="@+id/relativeLayout1"
         android:layout_width="fill_parent"
         android:layout_height="238dp"
-        android:layout_above="@+id/relativeLayout2"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true" >
 
@@ -24,47 +23,31 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/relativeLayout3"
-        android:layout_width="fill_parent"
-        android:layout_height="46dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true" >
-
-        <Button
-            android:id="@+id/btn_sound"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:background="@drawable/sound_on"
-            android:onClick="onClick_sound" />
-    </RelativeLayout>
-
-    <RelativeLayout
         android:id="@+id/relativeLayout2"
         android:layout_width="match_parent"
         android:layout_height="238dp"
-        android:layout_above="@+id/relativeLayout3"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true" >
-
-        <Button
-            android:id="@+id/create_match"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/create_match_custom"
-            android:onClick="onClick_create_match" />
 
         <Button
             android:id="@+id/join_match"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/create_match"
-            android:layout_below="@+id/create_match"
-            android:layout_marginTop="54dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="23dp"
             android:background="@drawable/join_match_custom"
             android:onClick="onClick_join_match" />
+
+        <Button
+            android:id="@+id/create_match"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/join_match"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="26dp"
+            android:background="@drawable/create_match_custom"
+            android:onClick="onClick_create_match" />
 
     </RelativeLayout>
 

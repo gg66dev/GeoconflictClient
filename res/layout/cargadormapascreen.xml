@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
+    android:background="@drawable/background4"
     android:orientation="vertical"
     tools:context=".CargarMapaScreen_activity" >
 
@@ -32,6 +32,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="29dp"
+        android:textColor="@color/opaque_red"
         android:text="@string/cargarmapa"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="@dimen/font_size" />
@@ -48,9 +49,9 @@
         android:id="@+id/back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/spinner1"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="45dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="25dp"
         android:background="@drawable/back_custom"
         android:onClick="onClick_back" />
 
